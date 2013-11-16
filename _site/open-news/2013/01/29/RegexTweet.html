@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script src="http://csvsoundsystem.com/csv.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/js/shadowbox.js"></script>
+        <title>Using spam bots for live reporting</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/css/app.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/icon.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="/css/accessibility_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_enclosed_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/social_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/shadowbox.css" type="text/css" />
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/img/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-9282817-3']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+        <script type="text/javascript">
+            Shadowbox.init();
+        </script>
+    </head>
+    <body>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="container">
+        <div class="block" >
+        <a href="mailto:brianabelson@gmail.com" target="_blank">EMAIL  @ </a>
+        <br>
+        <a href="http://www.twitter.com/brianabelson" target="_blank">TWITTER  <span class="icon"><i class="foundicon-twitter"></i></span>
+        </a>
+        <br>
+        <a href="http://www.github.com/abelsonlive" target="_blank">GITHUB
+        <span class="icon"><i class="foundicon-github"></i></span>
+        </a>
+        <br>
+        <a href="/atom.xml" target="_blank">RSS
+        <span class="icon"> <i class="foundicon-rss"></i></span>
+        </a>
+        <br>
+        <a href="/about"><span class="icon">ABOUT ??</span></a>
+        <br>
+        <a href="/"><span class="icon">HOME //</span></a>
+        <br>
+    </div>
+        <div class="row">
+            <div id="small-logo"><a href="/"><img src="/img/logo.png"></a></div>
+            <div class="span9" id="content">
+                <article>
+                <article>
+    <header>
+        <h1>Using spam bots for live reporting</h1>
+        <div class="social">
+            <div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="segoe ui"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="brianabelson">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+    </header>
+    <section class="entry"><p>For an upcoming project for <a href='http://newsbeastlabs.tumblr.com/'>NewsBeastLabs</a> on the gun debate, I’ve been monitoring statements representatives have made on the topic. As President Obama prepared to unveil his proposal for gun control last Wednesday, <a href='http://www.twitter.com/mhkeller'>Michael Keller</a> and I were curious to see the reactions of representatives to the highly publicized announcement. Given the degree to which breaking news is now reported (and responded to) on social media, we thought it would be useful to build a bot to log officials’ comments on certain issues and present them in real-time. Such a tool could be used by news rooms to engage their readers on a continuous basis by aggregating and serving content from members of particular communities or who serve on different committees.</p>
+
+<h3 id='repsguntweets_was_born'><a href='http://www.twitter.com/repsguntweets'>@RepsGunTweets</a> was born.</h3>
+
+<p>We were inspired by the work of 2013 Mozilla-Knight OpenNews fellows who recently built a prototpe for an app called “if (this) then news,&#8221; a news-oriented take on IFTTT – a site for linking triggers from gmail, twitter, dropbox, and other services to actions on the web. Applying this logic to news coverage, the fellows created the shell for a tool that would monitor live data streams, detect important events, and issue notifications. As Vice President Biden took the mic, we started furiously coding up a bot that would follow the twitter accounts of US Representatives and retweet any comment that included “gun&#8221;, “assault weapon&#8221;, “firearm&#8221;, or other relvant keywords. After a couple hours of missteps and headaches, we eventually got @RepsGunTweets up and running. In the last ten days, the bot has logged 307 tweets; two-thirds of which came in the first three days. We’re still analyzing the conversation but one interesting observation is representatives who are not in favor of gun control tend to link to longer explanations of their position on their website instead of tweet a comment.</p>
+
+<h3 id='under_the_hood'>Under the hood</h3>
+
+<p>At its core a retweet bot is a pretty simple tool: Follow a feed, find what matters, and serve it back up under a single account. The harder part is figuring out how to accurately communicate with Twitter’s API. Using tweepy for python we were able to easily access twitter’s numerous methods. All we needed to provide it with were the the consumer key, consumer secret, access token, and access token secret for an application generated on http://dev.twitter.com/apps). The bot follows CSPAN’s member of congress list and applies a regular expression for the desired keywords and retweets any matches.For even more technical info, including an easy way to create your own retweet bot, check out <a href='http://www.github.com/abelsonlive/regextweet'>this Github page</a>.</p></section>
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'brianabelson';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+            </article>
+            </div>
+            <div class="span3" id="rail">
+                <div id="logos"><a href="/"><img id="logo" src="/img/logo.png"></a></div>
+                <hr/>
+                <p class="nav-header">I'm Brian Abelson, a 2013 OpenNews Fellow at the New York Times. I apply statistics and social science to journalism and the measurement of media impact.</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <footer>
+                    <p class="footer">
+                        &copy; <a href="/">brian abelson</a> 2013 <br>
+                        powered by <a href="http://github.com/mojombo/jekyll/" target="_blank">jekyll</a> |
+                        layout from <a href="http://blog.apps.npr.org/" target="_blank">npr news apps</a>
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="/js/csv.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    <!-- GOOGLE ANALYTICS -->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-9282817-3']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+auto: true
+pygments: true
+url: http://brianabelson.com
+name: brian abelson
+feed_dir: feeds
+gekyll:
+    extras:
+        - diffs
+        - repo
+        - blobs
+

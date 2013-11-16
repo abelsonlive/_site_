@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script src="http://csvsoundsystem.com/csv.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/js/shadowbox.js"></script>
+        <title>Creating a metric for news apps</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/css/app.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/icon.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="/css/accessibility_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_enclosed_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/social_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/shadowbox.css" type="text/css" />
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/img/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-9282817-3']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+        <script type="text/javascript">
+            Shadowbox.init();
+        </script>
+    </head>
+    <body>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="container">
+        <div class="block" >
+        <a href="mailto:brianabelson@gmail.com" target="_blank">EMAIL  @ </a>
+        <br>
+        <a href="http://www.twitter.com/brianabelson" target="_blank">TWITTER  <span class="icon"><i class="foundicon-twitter"></i></span>
+        </a>
+        <br>
+        <a href="http://www.github.com/abelsonlive" target="_blank">GITHUB
+        <span class="icon"><i class="foundicon-github"></i></span>
+        </a>
+        <br>
+        <a href="/atom.xml" target="_blank">RSS
+        <span class="icon"> <i class="foundicon-rss"></i></span>
+        </a>
+        <br>
+        <a href="/about"><span class="icon">ABOUT ??</span></a>
+        <br>
+        <a href="/"><span class="icon">HOME //</span></a>
+        <br>
+    </div>
+        <div class="row">
+            <div id="small-logo"><a href="/"><img src="/img/logo.png"></a></div>
+            <div class="span9" id="content">
+                <article>
+                <article>
+    <header>
+        <h1>Creating a metric for news apps</h1>
+        <div class="social">
+            <div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="segoe ui"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="brianabelson">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+    </header>
+    <section class="entry"><p>More and more, newsrooms large and small are adopting digital and data-driven techniques to engage readers with their work. <a href='http://www.propublica.org/nerds/item/knight-foundation-makes-grant-to-support-propublicas-news-applications-desk'>News applications</a>, or &#8220;large web-based interactive database<span>s</span> that tell a journalistic story using software instead of words and pictures&#8221;, have emerged as the standard medium through which journalists present the outcomes of data-driven projects. From <a href='http://projects.propublica.org/docdollars/'>Dollars for Docs</a> to <a href='http://project.wnyc.org/dogs-of-nyc/'>Dogs of NYC</a>, news apps present readers with interactive experiences that offer them opportunities to engage more deeply with a story than traditional article-based formats. Given the common structure of news apps (discussed below) and the existence of <a href='https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide'>well-developed tools</a> for tracking user-level events on a website, I propose a simple framework for measuring engagement with news applications. <br /></p>
+
+<h3 id='what_makes_a_news_app_successful'>What makes a news app &#8220;successful&#8221;?</h3>
+
+<p>In a recent <a href='http://www.insidethunderdome.com/'>InsideThunderdome</a> live chat, <a href='https://twitter.com/kleinmatic'>Scott Klein</a>, editor of News Applications at ProPublica, wrote, &#8220;what I like to see in a news application <span>is</span> a way to see the &#8220;far&#8221; view (in other words, the big national picture) and the &#8220;near&#8221; view (how the big national phenomenon relates to me personally).&#8221; Put another way, the <em>far view</em> &#8220;lets you know why you should care, what the story is, what the national phenomenon is and how places compare to each other.&#8221; The <em>near view</em>, on the other hand, walks you &#8220;through levels of abstraction down to the very specific &#8211; your town, your street, your school. So if we&#8217;re successful now you know the national picture, why you should care, and what it&#8217;s got to do with you.&#8221;</p>
+
+<p>Echoing this philosophy, <a href='http://www.twitter.com/mhkeller'>Michael Keller</a>, Senior Data Reporter at Daily Beast says, &#8220;we think of interactives as tools to help people to see how a story might matter to them. Here, &#8216;success&#8217; means drawing people into the story and, if we&#8217;re lucky, also building in ways to hear how it affected them.&#8221;</p>
+
+<p>Other indications of what makes a &#8220;successful&#8221; news app come through job ads. For instance, <a href='http://www.pbs.org/newshour/jobs/webdev.html'>PBS&#8217;s News Hour</a> is looking for someone to &#8220;develop news applications that allow users to explore the stories behind data.&#8221;</p>
+
+<p>From these examples, a pattern emerges: a &#8220;successful&#8221; news application is one that presents a reader with a story and offers them an opportunity to dig deeper. Given this common structure of news applications, it should be possible to create a simple metric that captures the degree to which readers use an app to move from the far view to the near view. Such a metric might help newsrooms begin to assess readers&#8217; level of engagement; defined here as the intersection of what readers want and what newsrooms want readers to do. <br /></p>
+
+<h3 id='how_might_we_measure_this'>How might we measure this?</h3>
+
+<p>Over the past couple of years, <a href='http://www.niemanlab.org/2012/08/metrics-metrics-everywhere-how-do-we-measure-the-impact-of-journalism/'>journalists</a>, <a href='http://aronpilhofer.com/post/27993980039/the-right-metric-for-news'>editors</a>, and <a href='http://www.greglinch.com/2012/01/quantifying-impact-a-better-metric-for-measuring-journalism.html'>news room developers</a> have begun to openly criticize the poverty of traditional metrics like page views and average time spent on page. Most of their frustration lies in the inability of these metrics to capture deeper ideas like attitudinal, behavioral, or legislative change - in a word: impact. But while automated metrics may never fully capture these important considerations, they could help us get at some idea of overall reader engagement with a news application. <br /></p>
+
+<h5 id='event_tracking'>Event tracking</h5>
+
+<p>One step past page-views and time spent on page are more granular web metrics that capture individual events. From Google Analytics, Omniture, to WebTrends, many free and paid-for analytics services offer access to raw event-level data, or individual actions taken on a given page. &#8220;Events&#8221; can be created with small tags in your site&#8217;s JavaScript (<a href='https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide'>see how to do this with Google Analytics</a>). By tagging elements of a project associated with clicking through a site, entering a search term, watching a video, or sharing on social media, event tracking can be used to track a users path from the &#8216;far&#8217; to the &#8216;near&#8217; of news apps. <br /></p>
+
+<h5 id='identifying_users'>Identifying users</h5>
+
+<p>The difficult (<a href='http://en.wikipedia.org/wiki/Internet_privacy'>and perhaps troubling</a>) aspect of event tracking is the necessity of identifying individual users of a site. The New York Times is lucky enough to have substantial traffic from registered users. In these cases, collecting user-level event data over time and across multiple devices is simplified through logins. However, IP addresses or IDs extracted from <a href='http://en.wikipedia.org/wiki/HTTP_cookie'>cookies</a>, small bits of information that sites use to track their users, can serve as proxies. While these can be deactivated on <a href='http://www.aboutcookies.org/default.aspx?page=1'>most modern browsers</a>, or through services like <a href='https://www.torproject.org/'>Tor</a>, in most cases they can represent an &#8220;individual user.&#8221; In turn, reconciling this information allows us to study the scope of each user&#8217;s interaction with an app. <br /></p>
+
+<h3 id='a_case_study_the_red_carpet_project'>A case study: <em>The Red Carpet Project</em></h3>
+
+<p>In late January, the New York Times interactive team released <a href='http://www.nytimes.com/projects/oscars/red-carpet-history/'>an app</a> for exploring 15 years of outfits on the Red Carpet. The app represents a new take on the slide show, enabling filtering, searching, and sharing of certain slices of slides. Built into the app is an implicit logic of engagement: while the images are on showcase, readers are encouraged to explore the dresses and suits curated by editors and filter the images by time, style, and color. If all goes well, the readers share their own selection of outfits on social media. <br /> <br /></p>
+
+<h5 id='tagging_news_apps'>Tagging news apps</h5>
+<br /><br /><img src='/img/posts/metric-for-news-apps/red_carpet_site.png' /><br /><br />
+<p>In <em><a href='http://www.nytimes.com/projects/oscars/red-carpet-history/'>The Red Carpet Project</a></em>, the far view are the images themselves - what the app would have been had it been merely a slide show. Readers move closer to the near view as they filter the outfits, explore the editors&#8217; selections, and share the site on social media. By tagging each of these events with unique ids, we can isolate users whose behavior on the site was most indicative of &#8220;engagement.&#8221; <br /> <br /></p>
+
+<h5 id='exploring_the_data'>Exploring the data</h5>
+<br /><br /><center>
+    <img src='/img/posts/metric-for-news-apps/number_of_events.png' />
+</center><br />
+<p>Given the data for these events, we can now measure the most-used elements of the app. In the figure above, we group events into simpler categories. Note that &#8220;faves&#8221; connote instances where users selected their favorite outfits without necessarily sharing them on social media. We find that over 95% of the events captured were associated with viewing an image - the &#8220;far view.&#8221; However, without knowing the degree to which each reader used all possible features, we cannot approximate levels of engagement. <br /> <br /> <center>
+    <img src='/img/posts/metric-for-news-apps/number_of_features_used.png' />
+</center> <br /> By counting the number of unique features each reader used, we get a better idea of the degree to which users explored the app&#8217;s near view. We immediately see that readers rarely engaged with more than one or two of the apps features. Taken together these two graphs beg the question: what was the difference between readers who only viewed slides and those who used additional features? <br /> <br /> <center>
+    <img src='/img/posts/metric-for-news-apps/time_v_events.png' />
+</center> <br /> In this view, we see that more than half of the users viewed only slides and 5% clicked every slide without engaging other features. Readers that only clicked on slides also spent less time on the page than readers that explored more of the site. While such readers may have used the app extensively, they didn&#8217;t reach its &#8220;near view.&#8221; In creating a metric for news apps, we should account for these cases, assigning penalties for behaviors that suggest a lack of engagement. <br /> <br /></p>
+
+<h5 id='creating_a_metric_of_engagement'>Creating a metric of engagement</h5>
+
+<p>With these insights, we begin to get a sense of the things we can measure to approximate a user&#8217;s overall engagement with the app. While we&#8217;d like to give weight to the raw number of events &#8211; after all, rapidly clicking through 500 images without filtering is its own form of engagement &#8211; we also want to assign influence to features that capture whether a user reached the app&#8217;s near view. A metric of engagement for this app might looking something like this: <br /> <br /> <center>
+    <img src='/img/posts/metric-for-news-apps/engagement.png' />
+</center> <br /> <br /> While I&#8217;ve simplified the math here &#8211; the variables are also transformed to decrease the influence of outliers and re-scaled to increase interpretability &#8211; the abstracted equation represents a simplified measurement which captures the logic of engagement embedded in the site. In this case, the corresponding density plot reveals a bifurcated distribution of user experiences, with one half barely engaging with the site (1-20), and the other half dispersed over a long-tail (20-100). However, we might imagine alternate situations where more/less users explored the deeper intricacies of the app. In these cases we would expect the distribution of engagement to look much different. <br /> <br /></p>
+
+<h3 id='what_might_we_do_with_this'>What might we do with this?</h3>
+
+<p>Metrics, while abstractions, are useful in that they provide a single number one can use to track progress. As <a href='http://online.wsj.com/article/SB10001424127887323539804578261780648285770.html'>Bill Gates wrote</a> in a recent <em>Wall Street Journal</em> article (while referencing William Rosen&#8217;s <em><a href='http://www.amazon.com/Most-Powerful-Idea-World-Invention/dp/0226726347'>The Most Powerful Idea in the World</a></em>), &#8220;Without feedback from precise measurement &#8230; invention is &#8216;doomed to be rare and erratic.&#8217; With it, invention becomes &#8216;commonplace.&#8217;&#8221; Without a metric for news apps, our only tools for gauging success will be conjecture and anecdote - a great irony given the meticulousness with which data is cleaned and analyzed to construct these projects. With a standard, interpretable metric, editors and journalists can begin to judge whether their intuitions match up with their readers behavior; analysts can compare apps over time and across news organizations; developers will come to value simplicity of presentation and ease of use over technical complexity; and, perhaps most importantly, news organizations will begin designing their digital offerings with <a href='http://jonathanstray.com/designing-journalism-to-be-used'>users in mind</a>. While the measurements proposed here are just a rough sketch, I hope they will lead to an open discussion on the development of meaningul metrics for journalism.</p></section>
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'brianabelson';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+            </article>
+            </div>
+            <div class="span3" id="rail">
+                <div id="logos"><a href="/"><img id="logo" src="/img/logo.png"></a></div>
+                <hr/>
+                <p class="nav-header">I'm Brian Abelson, a 2013 OpenNews Fellow at the New York Times. I apply statistics and social science to journalism and the measurement of media impact.</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <footer>
+                    <p class="footer">
+                        &copy; <a href="/">brian abelson</a> 2013 <br>
+                        powered by <a href="http://github.com/mojombo/jekyll/" target="_blank">jekyll</a> |
+                        layout from <a href="http://blog.apps.npr.org/" target="_blank">npr news apps</a>
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="/js/csv.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    <!-- GOOGLE ANALYTICS -->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-9282817-3']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    </body>
+</html>

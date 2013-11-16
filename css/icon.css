@@ -1,0 +1,27 @@
+.block {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  color: #99D594;
+  width: 170px;
+  display: inline-block;
+  font-size:13px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  text-transform: bold;
+  text-align: right;
+  line-height:20px;
+}
+span.icon {
+  width: 30px;
+}
+span.at {
+  font-size: 40px;
+  margin-top: 10px;
+}
+.block a{
+}
+.block a:hover{
+  color: #A6CEE3;
+  text-decoration: none;
+}
