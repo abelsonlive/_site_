@@ -7,6 +7,253 @@
 		<atom:link href="http://brianabelson.com/feed.category.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Scrape the Gibson: Python skills for scrapers</title>
+				<description>&lt;p&gt;&lt;em&gt;Most of the code in this post is based on &lt;a href='https://github.com/pudo/hhba-scraping'&gt;a workshop&lt;/a&gt; my fellow ex-OpenNews fellow &lt;a href='http://www.twitter.com/pudo'&gt;@pudo&lt;/a&gt; gave at &lt;a href='http://www.mediaparty.info'&gt;Hacks Hackers Buenos Aires Media Party&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;br /&gt;
+&lt;p&gt;Two years ago, I learned I had superpowers. &lt;a href='http://www.twitter.com/spatiality'&gt;Steve Romalewski&lt;/a&gt; was working on some &lt;a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'&gt;fascinating&lt;/a&gt; &lt;a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'&gt;analyses&lt;/a&gt; of CitiBike locations and needed some help scraping information from the city&amp;#8217;s portal. Cobbling together the little I knew about &lt;code&gt;R&lt;/code&gt;, I wrote &lt;a href='https://gist.github.com/abelsonlive/2690803'&gt;a simple scraper&lt;/a&gt; to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from &lt;em&gt;Hackers&lt;/em&gt;:&lt;/p&gt;
+&lt;br /&gt;&lt;iframe height='360' src='//www.youtube.com/embed/vYNnPx8fZBs' width='640'&gt;
+&lt;/iframe&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;p&gt;Ever since then I&amp;#8217;ve spent a good portion of my life scraping data from websites. From &lt;a href='http://www.imdb.com/'&gt;movies&lt;/a&gt;, to &lt;a href='http://macaulaylibrary.org/'&gt;bird sounds&lt;/a&gt;, to &lt;a href='http://newyork.craigslist.org/mis/index.html'&gt;missed connections&lt;/a&gt;, and &lt;a href='http://eccie.net'&gt;john boards&lt;/a&gt; (don&amp;#8217;t ask, I promise it&amp;#8217;s for good!), there&amp;#8217;s not much I haven&amp;#8217;t tried to scrape. In many cases, I haven&amp;#8217;t even analyzed the data I&amp;#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.&lt;/p&gt;
+&lt;br /&gt;
+&lt;p&gt;In that time, I&amp;#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&amp;#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with &lt;code&gt;R&lt;/code&gt;&amp;#8217;s error handling that I just wrote &lt;a href='https://github.com/abelsonlive/scraply'&gt;my own library&lt;/a&gt; to do it. In the past year, I&amp;#8217;ve started using &lt;code&gt;python&lt;/code&gt; for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow &lt;a href='http://twitter.com/pudo'&gt;Friedrich Lindenberg&lt;/a&gt;. In this post I hope to share some of this knowledge.&lt;/p&gt;
+&lt;br /&gt;
+&lt;h2 id='basics'&gt;Basics&lt;/h2&gt;
+
+&lt;p&gt;There are many amazing libraries for parsing HTML in python – &lt;a href='https://github.com/gawel/pyquery'&gt;pyquery&lt;/a&gt;, &lt;a href='http://scrapy.org/'&gt;scrapy&lt;/a&gt;, and &lt;a href='http://pythonhosted.org/cssselect/'&gt;cssselect&lt;/a&gt; to name a few – but I&amp;#8217;ve always preferred &lt;a href='http://www.crummy.com/software/BeautifulSoup/bs4/doc/'&gt;BeautifulSoup&lt;/a&gt; for it&amp;#8217;s deceptive simplicity. Below, we&amp;#8217;ll walk through a simple example of scraping missed connections from CraigsList. As I further develop and refine this code, I&amp;#8217;ll introduce some best practices I&amp;#8217;ve learned from &lt;a href='http://twitter.com/pudo'&gt;@pudo&lt;/a&gt;.&lt;/p&gt;
+&lt;br /&gt;
+&lt;p&gt;Let&amp;#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on computer you&amp;#8217;ll need to have two python modules installed: requests and BeautifulSoup. To install these, you can run this command in your terminal:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;sudo pip install beautifulsoup4 requests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If this returns and error, try installing pip and running the command again:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;sudo easy_install pip
+sudo pip install beautifulsoup4 requests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If everything works you should be able to open a python terminal and import the libraries with no errors:&lt;/p&gt;
+&lt;br /&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='pycon'&gt;&lt;span class='go'&gt;python&lt;/span&gt;
+&lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;requests&lt;/span&gt;
+&lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;bs4&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;p&gt;Alright, now that we&amp;#8217;re set, let&amp;#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet I add comments for each line. You can follow along with each of these scripts on &lt;a href='https://github.com/abelsonlive/scrape-the-gibson'&gt;the github repository&lt;/a&gt;.&lt;/p&gt;
+&lt;br /&gt;
+&lt;h4 id='00basicspy'&gt;00-basics.py&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;requests&lt;/span&gt;
+&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;bs4&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;
+&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;pprint&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;pprint&lt;/span&gt;
+&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;urlparse&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;urljoin&lt;/span&gt;
+
+&lt;span class='c'&gt;# The base url for craigslist in New York&lt;/span&gt;
+&lt;span class='n'&gt;BASE_URL&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;http://newyork.craigslist.org/&amp;#39;&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;scrape_missed_connections&lt;/span&gt;&lt;span class='p'&gt;():&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Scrape all the missed connections from a list &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    
+    &lt;span class='c'&gt;# Download the list of missed connections&lt;/span&gt;
+
+    &lt;span class='c'&gt;# here were using requests, &lt;/span&gt;
+    &lt;span class='c'&gt;# a python library for accessing the web&lt;/span&gt;
+
+    &lt;span class='c'&gt;# we add &amp;quot;mis/&amp;quot; to the url to tell requests&lt;/span&gt;
+    &lt;span class='c'&gt;# to get the missed connections &lt;/span&gt;
+    &lt;span class='c'&gt;# on newyork.craigslist.org&lt;/span&gt;
+
+    &lt;span class='n'&gt;response&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;requests&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;BASE_URL&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;mis/&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c'&gt;# parse HTML using Beautiful Soup&lt;/span&gt;
+    &lt;span class='c'&gt;# this returns a `soup` object which&lt;/span&gt;
+    &lt;span class='c'&gt;# gives us convenience methods for parsing html&lt;/span&gt;
+
+    &lt;span class='n'&gt;soup&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c'&gt;# find all the posts in the page.&lt;/span&gt;
+
+    &lt;span class='c'&gt;# here we&amp;#39;re telling BeautifulSoup to get us every&lt;/span&gt;
+    &lt;span class='c'&gt;# span tag that has a class that equals pl&lt;/span&gt;
+
+    &lt;span class='c'&gt;# these tags might look something like this:&lt;/span&gt;
+    &lt;span class='c'&gt;# &amp;lt;span class=&amp;#39;pl&amp;#39;&amp;gt; {content} &amp;lt;/span&amp;gt;&lt;/span&gt;
+
+    &lt;span class='n'&gt;missed_connections&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;soup&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find_all&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;span&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;pl&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;})&lt;/span&gt;
+
+    &lt;span class='c'&gt;# Get all the links to missed connection pages:&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;missed_connection&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;missed_connections&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        
+        &lt;span class='c'&gt;# for each span list, find the &amp;quot;a&amp;quot; tag which &lt;/span&gt;
+        &lt;span class='c'&gt;# represents the link to the missed connection page.&lt;/span&gt;
+
+        &lt;span class='n'&gt;link&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;missed_connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;attrs&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;href&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+        
+        &lt;span class='c'&gt;# join this relative link with the &lt;/span&gt;
+        &lt;span class='c'&gt;# BASE_URL to create an absolute link&lt;/span&gt;
+
+        &lt;span class='n'&gt;url&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;BASE_URL&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;link&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        
+        &lt;span class='c'&gt;# pass this url to a function (defined below) to scrape &lt;/span&gt;
+        &lt;span class='c'&gt;# info about that missed connection&lt;/span&gt;
+
+        &lt;span class='n'&gt;scrape_missed_connection&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;scrape_missed_connection&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Extract information from a missed connections&amp;#39;s page. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class='c'&gt;# retrieve the missed connection with requests&lt;/span&gt;
+
+    &lt;span class='n'&gt;response&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;requests&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c'&gt;# Parse the html of the missed connection post&lt;/span&gt;
+
+    &lt;span class='n'&gt;soup&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c'&gt;# Extract the actual contents of some HTML elements:&lt;/span&gt;
+
+    &lt;span class='c'&gt;# here were using BeautifulSoup&amp;#39;s `text` method for retrieving&lt;/span&gt;
+    &lt;span class='c'&gt;# the plain text within each HTML element.&lt;/span&gt;
+
+    &lt;span class='c'&gt;# see and example of what this page looks like here:&lt;/span&gt;
+
+    &lt;span class='n'&gt;data&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;#39;source_url&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;#39;subject&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;soup&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;h2&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;postingtitle&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;})&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;text&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;strip&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;soup&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;section&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;id&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;postingbody&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;})&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;text&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;strip&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt;
+        &lt;span class='s'&gt;&amp;#39;datetime&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt; &lt;span class='n'&gt;soup&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;time&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;attrs&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;datetime&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+    &lt;span class='p'&gt;}&lt;/span&gt;
+
+    &lt;span class='c'&gt;# Print it prettily. &lt;/span&gt;
+    &lt;span class='n'&gt;pprint&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;data&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;__name__&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+    &lt;span class='n'&gt;scrape_missed_connections&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;p&gt;If all goes well you should see a series of python dictionaries printed to your console:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='pycon'&gt;&lt;span class='go'&gt;{&lt;/span&gt;
+&lt;span class='go'&gt;    &amp;#39;body&amp;#39;: &amp;#39;I saw you on your way home from work last night. I hoped to see you on the way to work this morning, and I did. Actually, I usually see you on the way to work. I wanted to say hello this morning, and I stupidly smiled at you wanting you to smile back. You looked at me in acknowledgement but that seemed about it. I will have to talk to you the next time I see you and tell you how cute you look in that hat you were wearing.&amp;#39;,&lt;/span&gt;
+&lt;span class='go'&gt;    &amp;#39;datetime&amp;#39;: &amp;#39;2013-12-18T10:50:29-0500&amp;#39;,&lt;/span&gt;
+&lt;span class='go'&gt;    &amp;#39;source_url&amp;#39;: &amp;#39;http://newyork.craigslist.org/brk/mis/4249329594.html&amp;#39;,&lt;/span&gt;
+&lt;span class='go'&gt;    &amp;#39;subject&amp;#39;: &amp;#39;A train to work this morning - m4w&amp;#39;&lt;/span&gt;
+&lt;span class='go'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
+&lt;h2 id='databases'&gt;Databases&lt;/h2&gt;
+
+&lt;p&gt;We could stop here and probably be fine, but it&amp;#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we could also quickly construct an api or app on top of the data we scrape. Luckily, &lt;a href='http://www.twitter.com/'&gt;@pudo&lt;/a&gt; wrote an amazing python library called &lt;a href='http://dataset.readthedocs.org'&gt;dataset&lt;/a&gt; that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:&lt;/p&gt;
+&lt;br /&gt;
+&lt;h4 id='01datasetpy'&gt;&lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'&gt;01-dataset.py&lt;/a&gt;&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;dataset&lt;/span&gt;
+
+&lt;span class='c'&gt;# connect to a database&lt;/span&gt;
+
+&lt;span class='c'&gt;# here we&amp;#39;re just going to use sqlite3 which is a lightweight&lt;/span&gt;
+&lt;span class='c'&gt;# SQL store, ideal for simple scraping jobs.  However, we could&lt;/span&gt;
+&lt;span class='c'&gt;# easily use MySQL or PostgreSQL by simply swapping out the path&lt;/span&gt;
+&lt;span class='c'&gt;# to the database:&lt;/span&gt;
+
+&lt;span class='n'&gt;db&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;dataset&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;connect&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;sqlite:///missed_connections.db&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='o'&gt;...&lt;/span&gt;
+
+&lt;span class='c'&gt;# now instead of simply printing our data to the console,&lt;/span&gt;
+&lt;span class='c'&gt;# lets put it into our database&lt;/span&gt;
+
+&lt;span class='c'&gt;# here db[&amp;#39;posts&amp;#39;] signifies that we are going to insert data&lt;/span&gt;
+&lt;span class='c'&gt;# into the &amp;#39;posts&amp;#39; table of the database. We&amp;#39;ll use &amp;quot;upsert&amp;quot;&lt;/span&gt;
+&lt;span class='c'&gt;# instead of &amp;quot;insert&amp;quot; because we&amp;#39;ll probably want to run the&lt;/span&gt;
+&lt;span class='c'&gt;# scraper a few times to test it, and this way we won&amp;#39;t continually&lt;/span&gt;
+&lt;span class='c'&gt;# add duplicate records to our database.&lt;/span&gt;
+
+&lt;span class='n'&gt;db&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;posts&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;upsert&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;data&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;source_url&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Putting it all together, our new script should look something like &lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;br /&gt;
+&lt;h2 id='caching'&gt;Caching&lt;/h2&gt;
+
+&lt;p&gt;One of the most common scraping problems is having your script break midway through execution and having to start over from scratch. This isn&amp;#8217;t too big of a problem if you&amp;#8217;re scraping a few pages, but if you&amp;#8217;re trying to pull in everything from IMDB or CraigsList, you&amp;#8217;ll slowly drive yourself insane when, three hours into a job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&amp;#8217;re scraping (in other words, to save them to a local file).&lt;/p&gt;
+&lt;br /&gt;
+&lt;p&gt;To implement this, we need to write a function that checks whether we&amp;#8217;ve already saved a local version of the page already and, if so, load the cached version rather than hitting the site&amp;#8217;s server again. If not, we&amp;#8217;ll proceed as normal and request the page from the site&amp;#8217;s server and then save a version of it locally:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;os&lt;/span&gt;
+&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;hashlib&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;sha1&lt;/span&gt;
+
+
+&lt;span class='c'&gt;# a directory for caching file&amp;#39;s we&amp;#39;ve already downloaded&lt;/span&gt;
+&lt;span class='n'&gt;CACHE_DIR&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;join&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;dirname&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;__file__&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;cache&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;url_to_filename&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Make a URL into a file name, using SHA1 hashes. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class='c'&gt;# use a sha1 hash to convert the url into a unique filename&lt;/span&gt;
+    &lt;span class='n'&gt;hash_file&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;sha1&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;hexdigest&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;.html&amp;#39;&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;join&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;CACHE_DIR&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;hash_file&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;store_local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Save a local copy of the file. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class='c'&gt;# If the cache directory does not exist, make one.&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;isdir&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;CACHE_DIR&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;makedirs&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;CACHE_DIR&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='c'&gt;# Save to disk.&lt;/span&gt;
+    &lt;span class='n'&gt;local_path&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;url_to_filename&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;with&lt;/span&gt; &lt;span class='nb'&gt;open&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;local_path&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;wb&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='k'&gt;as&lt;/span&gt; &lt;span class='n'&gt;f&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='n'&gt;f&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;write&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;load_local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Read a local copy of a URL. &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class='n'&gt;local_path&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;url_to_filename&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='n'&gt;os&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;path&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;exists&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;local_path&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;
+
+    &lt;span class='k'&gt;with&lt;/span&gt; &lt;span class='nb'&gt;open&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;local_path&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='k'&gt;as&lt;/span&gt; &lt;span class='n'&gt;f&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;f&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;read&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;get_content&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Wrap requests.get() &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;load_local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='ow'&gt;is&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='n'&gt;response&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;requests&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;
+        &lt;span class='n'&gt;store_local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, everytime we request a new missed connection, we should use our &lt;code&gt;get_content&lt;/code&gt; function instead of &lt;code&gt;requests.get()&lt;/code&gt;. Merging this code in, our script should now look &lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/02-caching.py'&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;br /&gt;
+&lt;h2 id='multithreading'&gt;Multithreading&lt;/h2&gt;
+
+&lt;p&gt;Up to this point, our script has only been capable of downloading a single missed connection at a time. It turns out that a single processor is capable of executing multiple tasks at a time via a process that&amp;#8217;s called &amp;#8221;&lt;a href='http://en.wikipedia.org/wiki/Multithreading_(computer_architecture'&gt;multithreading&lt;/a&gt;).&amp;#8221; This is different than &lt;a href='http://en.wikipedia.org/wiki/Parallel_processing'&gt;parallel processing&lt;/a&gt; where a set of tasks are executed across across a series of networked computers. In the case of our task – scraping multiple missed connections – this means that instead of simply looping through the list of each missed connection, that we&amp;#8217;ll first detect all the urls to the missed connection pages and then downloading and parse these pages across multiple threads. It turns out that, once again, &lt;a href='http://twitter.com/pudo'&gt;@pudo&lt;/a&gt; has solved this problem for us. With a simple module he wrote named &lt;a href='https://github.com/pudo/thready'&gt;thready&lt;/a&gt;, we can pass this list of urls to our function that scrapes each missed connection and very quickly and easily increase the speed with which we parse all the pages. This is implemented by modifying our &lt;code&gt;scrape_missed_connections&lt;/code&gt; function as follows:&lt;/p&gt;
+&lt;br /&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;thready&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;threaded&lt;/span&gt;
+
+&lt;span class='o'&gt;...&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;scrape_missed_connections&lt;/span&gt;&lt;span class='p'&gt;():&lt;/span&gt;
+    &lt;span class='sd'&gt;&amp;quot;&amp;quot;&amp;quot; Scrape all the missed connections from a list &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class='n'&gt;response&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;requests&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;BASE_URL&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;mis/&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;soup&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;missed_connections&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;soup&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find_all&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;span&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;class&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;pl&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;})&lt;/span&gt;
+
+    &lt;span class='c'&gt;# create an empty list of urls to scrape &lt;/span&gt;
+    &lt;span class='n'&gt;urls&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;missed_connection&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;missed_connections&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+
+        &lt;span class='n'&gt;link&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;missed_connection&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;find&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;attrs&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;href&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+        &lt;span class='n'&gt;url&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;BASE_URL&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;link&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        
+        &lt;span class='c'&gt;# iteratively populate this list &lt;/span&gt;
+        &lt;span class='n'&gt;urls&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+
+    &lt;span class='c'&gt;# download and parse these missed connections using&lt;/span&gt;
+    &lt;span class='c'&gt;# multiple threads&lt;/span&gt;
+    &lt;span class='n'&gt;threaded&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;urls&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;scrape_missed_connection&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;num_threads&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now when we execute &lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/03-multithreading.py'&gt;this script&lt;/a&gt;, it should run much, much faster than our previous scripts. Be warned, however, many sites do not appreciate you requesting multiple pages at once and may ban you from the site for throttling their servers. Make sure to excercise caution and be respectful when utilizing multiple threads to scrape a site.&lt;/p&gt;
+&lt;br /&gt;
+&lt;p&gt;With these three simple skills, you should be able to start scraping the web like a true hacker. Enjoy!&lt;/p&gt;</description>
+				<pubDate>Tue, 17 Dec 2013 00:00:00 -0500</pubDate>
+				<link>http://brianabelson.com/open-news/2013/12/17/best-practices-for-scraping-in-python.html</link>
+				<guid isPermaLink="true">http://brianabelson.com/open-news/2013/12/17/best-practices-for-scraping-in-python.html</guid>
+			</item>
+		
+			<item>
 				<title>The Relationship Between Promotion and Performance:<br/> Pageviews Above Replacement</title>
 				<description>&lt;p&gt;&lt;em&gt;This is the second in a series of two posts about pageviews. This post details some research I&amp;#8217;ve conducted on the promotional correlates of the metric, while &lt;a href='http://brianabelson.com/open-news/2013/10/09/Whither-the-pageview_apocalypse.html'&gt;the previous post&lt;/a&gt; discussed the sometimes apocalyptic tone of the discourse surrounding the &amp;#8216;death&amp;#8217; of pageviews.&lt;/em&gt; &lt;br /&gt; &lt;br /&gt;&lt;/p&gt;
 
@@ -24,8 +271,8 @@
 &lt;hr /&gt;
 &lt;p&gt;Throughout my stint at the &lt;em&gt;Times&lt;/em&gt; I have often witnessed analysts, social media editors, journalists, and business executives sprung into action when a particular piece of content is not meeting its expectations. In most cases, the solution is to intensify promotional efforts. Whether it be through a concentrated social media campaign or simply leaving the article on the homepage longer than normal, the inevitable result is that traffic to the article increases. Following this behavioral pattern, I expected to see a clear relationship in the data between promotional energies and pageviews.&lt;br /&gt;&lt;br /&gt; In the chart below, the data is visualized over time. The y-axis connotes the total number of pageviews the article received over seven days while the x-axis represents when the article was published. Pageviews are transformed along a &lt;a href='http://www.explainxkcd.com/wiki/index.php?title=1162:_Log_Scale'&gt;logarithmic scale&lt;/a&gt; in which the differences between points correspond to orders of magnitude, rather than the raw number (in other words, the actual difference between points lower in the scale is much smaller than those higher up). In this chart and the others that follow, I remove axis annotations for pageviews so as to protect the privacy of the &lt;em&gt;New York Times&lt;/em&gt;. Finally, each dot is colored by the time the article spent on the homepage and sized by the number of times it was tweeted by a &lt;em&gt;New York Times&lt;/em&gt; Twitter account. For context, I add a line through the middle that represents the average number of pageviews for articles published on each day.&lt;/p&gt;
 &lt;br /&gt;&lt;br /&gt;&lt;center&gt;
-  &lt;a href='/img/posts/what-metrics-are-for-and-what-they-do/viz/life-of-the-data.png' rel='shadowbox'&gt;
-    &lt;img src='/img/posts/what-metrics-are-for-and-what-they-do/viz/life-of-the-data.png' /&gt;
+  &lt;a href='/img/posts/pageviews-above-/viz/life-of-the-data.png' rel='shadowbox'&gt;
+    &lt;img src='/img/posts/pageviews-above-/viz/life-of-the-data.png' /&gt;
     &lt;center&gt; &lt;small&gt; &lt;i&gt; Click to Enlarge&lt;/i&gt; &lt;/small&gt; &lt;/center&gt;
   &lt;/a&gt;
 &lt;/center&gt;&lt;br /&gt;&lt;br /&gt;
@@ -53,8 +300,8 @@
     &lt;/tr&gt;
 &lt;/table&gt;
 &lt;/center&gt; &lt;br /&gt; &lt;br /&gt; Through my explorations of the data, I found that these two variables were significantly associated with the number of pageviews an article received (discussed more below). Intuitively it makes sense  —  stories from the wire should not receive the same promotional energies as those that come from journalists working at the &lt;em&gt;Times&lt;/em&gt;. Likewise, articles which are exposed to @NYTimes&amp;#8217; 10 million followers will invariably perform better than those which do not receive this boost. &lt;br /&gt; &lt;br /&gt; &lt;br /&gt; &lt;center&gt;
-  &lt;a href='/img/posts/what-metrics-are-for-and-what-they-do/viz/time-on-hp-vs-pageviws-social-wire.png' rel='shadowbox'&gt;
-    &lt;img src='/img/posts/what-metrics-are-for-and-what-they-do/viz/time-on-hp-vs-pageviws-social-wire.png' /&gt;
+  &lt;a href='/img/posts/pageviews-above-/viz/time-on-hp-vs-pageviws-social-wire.png' rel='shadowbox'&gt;
+    &lt;img src='/img/posts/pageviews-above-/viz/time-on-hp-vs-pageviws-social-wire.png' /&gt;
     &lt;center&gt; &lt;small&gt; &lt;i&gt; Click to Enlarge&lt;/i&gt; &lt;/small&gt; &lt;/center&gt;
   &lt;/a&gt;
 &lt;/center&gt; &lt;br /&gt; &lt;br /&gt; This chart shows the stark contrast in the lives of articles that pass through the &lt;em&gt;New York Times&lt;/em&gt;. On the left side of the graph, we see a stack of 13,000 articles (73% of the total) which were never promoted on the homepage. These articles exist in somewhat of an online &lt;a href='http://en.wikipedia.org/wiki/State_of_nature'&gt;&amp;#8216;State of Nature&amp;#8217;&lt;/a&gt; and for most, their lives are &lt;a href='http://en.wikipedia.org/wiki/Leviathan_(book)'&gt;nasty, brutish, and short&lt;/a&gt;. Of these, about two-thirds are wire content. The other third are stories from &lt;em&gt;Times&lt;/em&gt; journalists, two percent of which were also tweeted by @NYTimes. Just to the right of this stack is content which was on the homepage for 10 - 100 minutes. Of these, a shockingly high 98% are wire articles. In this space, the articles that performed especially well were the fortunate one percent linked to by @NYTimes. Finally, on the right half of the chart are the six percent of articles which spent more than 100 minutes on the homepage. Over 90% of these articles are original content and almost 80% were promoted by @NYTimes. &lt;br /&gt; &lt;br /&gt; What emerges from this visualization is a clear picture of four distinct classes of content on the New York Times&amp;#8217; site: (A) Wire articles which never reached the homepage, (B) Original articles which never reached the homepage, (C) Wire content which is featured on the homepage for a short period of time, and (D) Original content which receives promotion on both the homepage and across social media. While groups A and B encompass a wide variety of outcomes, groups C and D generally display a positive linear relationship between time on homepage and pageviews. &lt;br /&gt; &lt;br /&gt;&lt;/p&gt;
@@ -86,8 +333,8 @@
 &lt;/ul&gt;
 &lt;i&gt;+/- symbols signify the direction of correlation&lt;/i&gt;&lt;br /&gt;&lt;br /&gt;
 &lt;p&gt;While it may be tempting to latch on to any one of these variables, the general idea is that, holding all else constant, articles which receive more promotion  —  on the homepage, across section fronts, and on social media  —  will invariably receive more pageviews. While there are some serious problems in such an analysis  —  it is likely that content which performs well tends to attract the attention of homepage and social media editors  —  the power of the relationship suggests that, in general, the &lt;em&gt;Times&lt;/em&gt; can selectively pick and choose the content that garners the most attention by simply manipulating their homepage and principal Twitter account. This is certainly not an earth-shattering insight, but the degree to which it holds true suggests that these factors cannot be ignored. &lt;br /&gt; &lt;br /&gt; Below, I visualize a scatterplot of the actual number of pageviews versus the number my model predicted. Once again, dots are colored by the four categories outlined above, with lines pointing to the average number of pageviews for each category. &lt;br /&gt; &lt;br /&gt; &lt;center&gt;
-  &lt;a href='/img/posts/what-metrics-are-for-and-what-they-do/viz/pred-vs-actual.png' rel='shadowbox'&gt;
-    &lt;img src='/img/posts/what-metrics-are-for-and-what-they-do/viz/pred-vs-actual.png' /&gt;
+  &lt;a href='/img/posts/pageviews-above-/viz/pred-vs-actual.png' rel='shadowbox'&gt;
+    &lt;img src='/img/posts/pageviews-above-/viz/pred-vs-actual.png' /&gt;
     &lt;center&gt; &lt;small&gt; &lt;i&gt; Click to Enlarge&lt;/i&gt; &lt;/small&gt; &lt;/center&gt;
   &lt;/a&gt;
 &lt;/center&gt; &lt;br /&gt; &lt;br /&gt; While this chart mainly communicates the predictive power of the model, it also reveals some other interesting insights. For instance, there is a much higher level of variance  —  or predictive error in the model  —  at lower levels of pageviews. This is the manifestation of the &amp;#8216;State of Nature&amp;#8217; described above. Since promotional energies are such strong a predictor of performance, articles that receive very little promotion are harder to predict. Further investigation confirmed that the majority of the error in my model was present in articles which never reached the homepage. &lt;br /&gt; &lt;br /&gt; More importantly, the relationship between actual and predicted pageviews represents a fundamental building block of PAR. In the graph, the straight gray line signifies the threshold of a perfect prediction. Articles that fall above this line can be thought to have exceeded their expected number of pageviews while those below the line have underperformed. Computing the error of the model, or the difference between actual and predicted pageviews, allows us to calculate the degree to which any given article has performed in relationship to its &amp;#8220;replacement&amp;#8221;  —  or a hypothetically similar article which received the same level of promotion. &lt;br /&gt; &lt;br /&gt;&lt;/p&gt;
@@ -95,8 +342,8 @@
 &lt;h2 id='calculating_par'&gt;Calculating PAR&lt;/h2&gt;
 &lt;hr /&gt;
 &lt;p&gt;While I am still in the nascent stages of this research, I explored what PAR might look like if we were to use it to evaluate the performance of various sections on the &lt;em&gt;New York Times&lt;/em&gt;. Below I visualize the average PAR  —  or the degree to which a given article&amp;#8217;s actual number of pageviews deviated from the number my model predicted  —   for the top sections in terms of the number of articles produced. In the chart, the x-axis represents standard deviations  —  or the distance a data point is from its mean  —  so that we may compare multiple variables on the same scale. The x-position of reddish dots signifies a section&amp;#8217;s average PAR. These dots are also sized by the average number of times NYT Twitter accounts shared a link to an article in a given section. Concurrently, the x-position of blue dots signifies the average pageviews for articles from each section. These dots are sized by the total number of articles published in that section. Finally, the lines connecting these two sets of dots are colored by the average time articles from these sections were promoted on the homepage. &lt;br /&gt; &lt;br /&gt; &lt;center&gt;
-  &lt;a href='/img/posts/what-metrics-are-for-and-what-they-do/viz/par-by-section.png' rel='shadowbox'&gt;
-    &lt;img src='/img/posts/what-metrics-are-for-and-what-they-do/viz/par-by-section.png' /&gt;
+  &lt;a href='/img/posts/pageviews-above-/viz/par-by-section.png' rel='shadowbox'&gt;
+    &lt;img src='/img/posts/pageviews-above-/viz/par-by-section.png' /&gt;
     &lt;center&gt; &lt;small&gt;&lt;i&gt;Click to Enlarge&lt;/i&gt; &lt;/small&gt; &lt;/center&gt;
   &lt;/a&gt;
 &lt;/center&gt; &lt;br /&gt; &lt;br /&gt; As the annotations on the chart suggest, PAR significantly levels the playing field. While Business, US, Technology, World, and Sports all rank much lower with regards to raw pageviews, PAR accounts for their relatively low level of promotion (visualized by the blue lines and small red dots). In turn, these sections rank in the middle of pack with regards to PAR. On the other hand, Opinion, Magazine, and Real Estate pieces, which rank high in terms of pageviews, are not so far ahead when calculating PAR. It is important to note, of course, that content which garners an extreme amount of traffic will still rank high in terms of PAR, as these signify outliers from the norm, and the model will never be able to fully account for these deviations. &lt;br /&gt; &lt;br /&gt;&lt;/p&gt;
