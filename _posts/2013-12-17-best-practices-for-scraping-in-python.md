@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Scrape the Gibson: Python skills for scrapers"
+title: "Scrape the Gibson: Python skills for data scrapers"
 description: "I used to scrape data stupidly. @pudo taught me better."
 author: Brian Abelson
 email: brianabelson@gmail.com
@@ -302,6 +302,9 @@ def scrape_missed_connections():
     threaded(urls, scrape_missed_connection, num_threads=10)
 
 {% endhighlight %}
+
+<br/>
+
 
 Now when we execute [this script](https://github.com/abelsonlive/scrape-the-gibson/blob/master/03-multithreading.py), it should run much, much faster than our previous scripts.  Be warned, however, many sites do not appreciate you requesting multiple pages at once and may ban you from the site for throttling their servers.  Make sure to excercise caution and be respectful when utilizing multiple threads to scrape a site.
 

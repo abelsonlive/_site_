@@ -73,8 +73,8 @@ In the chart below, the data is visualized over time.  The y-axis connotes the t
 <br/>
 <br/>
 <center>
-  <a href="/img/posts/pageviews-above-/viz/life-of-the-data.png" rel="shadowbox">
-    <img src="/img/posts/pageviews-above-/viz/life-of-the-data.png">
+  <a href="/img/posts/pageviews-above-replacement/viz/life-of-the-data.png" rel="shadowbox">
+    <img src="/img/posts/pageviews-above-replacement/viz/life-of-the-data.png">
     <center> <small> <i> Click to Enlarge</i> </small> </center>
   </a>
 </center>
@@ -117,8 +117,8 @@ Through my explorations of the data, I found that these two variables were signi
 <br/> 
 <br/>
 <center>
-  <a href="/img/posts/pageviews-above-/viz/time-on-hp-vs-pageviws-social-wire.png" rel="shadowbox">
-    <img src="/img/posts/pageviews-above-/viz/time-on-hp-vs-pageviws-social-wire.png">
+  <a href="/img/posts/pageviews-above-replacement/viz/time-on-hp-vs-pageviws-social-wire.png" rel="shadowbox">
+    <img src="/img/posts/pageviews-above-replacement/viz/time-on-hp-vs-pageviws-social-wire.png">
     <center> <small> <i> Click to Enlarge</i> </small> </center>
   </a>
 </center>
@@ -162,8 +162,8 @@ Below, I visualize a scatterplot of the actual number of pageviews versus the nu
 <br/>
 <br/>
 <center>
-  <a href="/img/posts/pageviews-above-/viz/pred-vs-actual.png" rel="shadowbox">
-    <img src="/img/posts/pageviews-above-/viz/pred-vs-actual.png">
+  <a href="/img/posts/pageviews-above-replacement/viz/pred-vs-actual.png" rel="shadowbox">
+    <img src="/img/posts/pageviews-above-replacement/viz/pred-vs-actual.png">
     <center> <small> <i> Click to Enlarge</i> </small> </center>
   </a>
 </center>
@@ -181,8 +181,8 @@ While I am still in the nascent stages of this research, I explored what PAR mig
 <br/>
 <br/>
 <center>
-  <a href="/img/posts/pageviews-above-/viz/par-by-section.png" rel="shadowbox">
-    <img src="/img/posts/pageviews-above-/viz/par-by-section.png">
+  <a href="/img/posts/pageviews-above-replacement/viz/par-by-section.png" rel="shadowbox">
+    <img src="/img/posts/pageviews-above-replacement/viz/par-by-section.png">
     <center> <small><i>Click to Enlarge</i> </small> </center>
   </a>
 </center>
