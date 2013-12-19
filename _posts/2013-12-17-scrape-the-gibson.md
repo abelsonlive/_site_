@@ -56,7 +56,7 @@ python
 >>> import requests
 >>> from bs4 import BeautifulSoup
 >>> import dataset
->>> from thready import thereaded
+>>> from thready import threaded
 {% endhighlight %}
 
 <br/>
@@ -277,7 +277,7 @@ Now, everytime we request a new missed connection, we should use our `get_conten
 
 ## Multithreading
 
-Up to this point, our script has only been capable of downloading a single missed connection at a time.  It turns out that a single processor is capable of executing multiple tasks at a time via a process that's called "[multithreading](http://en.wikipedia.org/wiki/Multithreading_(computer_architecture))." This is different than [parallel processing](http://en.wikipedia.org/wiki/Parallel_processing) where a set of tasks are executed across across a series of networked computers.  In the case of our task  –  scraping multiple missed connections  –  this means that instead of simply looping through the list of each missed connection, that we'll first detect all the urls to the missed connection pages and then downloading and parse these pages across multiple threads.  It turns out that, once again, [@pudo](http://twitter.com/pudo) has solved this problem for us.  With a simple module he wrote named [thready](https://github.com/pudo/thready), we can pass this list of urls to our function that scrapes each missed connection and very quickly and easily increase the speed with which we parse all the pages.  This is implemented by modifying our `scrape_missed_connections` function as follows:
+Up to this point, our script has only been capable of downloading a single missed connection at a time.  It turns out that a single processor is capable of executing multiple tasks at a time via something called "[multithreading](http://en.wikipedia.org/wiki/Multithreading_(computer_architecture))." This is different than [parallel processing](http://en.wikipedia.org/wiki/Parallel_processing) where a set of tasks are executed across across a series of networked computers.  In the case of our task  –  scraping multiple missed connections  –  this means that instead of simply looping through the list of each missed connection, that we'll first detect all the urls to the missed connection pages and then download and parse these pages utilizing multiple threads within a single processor.  It turns out that, once again, [@pudo](http://twitter.com/pudo) has solved this problem for us.  With a simple module he wrote named [thready](https://github.com/pudo/thready), we can pass this list of urls to our function that scrapes each missed connection and very quickly and easily increase the speed with which we parse all the pages.  This is implemented by modifying our `scrape_missed_connections` function as follows:
 
 <br/>
 
