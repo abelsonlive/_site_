@@ -246,7 +246,9 @@ sudo pip install beautifulsoup4 requests dataset thready
 <p>One of the most common scraping problems is realizing your script is buggy midway through execution and having to start over from scratch. This isn&#8217;t too big of a problem if you&#8217;re scraping a few pages, but if you&#8217;re trying to pull in everything from IMDB or CraigsList, you&#8217;ll slowly drive yourself insane when, three hours into a big job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&#8217;re scraping (in other words, save them to a local file).</p>
 <br />
 <p>To implement this, we need to write a function that checks whether we&#8217;ve already saved a local version of the page already and, if so, load the cached version rather than hitting the site&#8217;s server again. If not, we&#8217;ll proceed as normal and request the page from the site&#8217;s server and then save a version of it locally:</p>
-<br /><div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>os</span>
+<br />
+<h4 id='02cachingpy'>02-caching.py</h4>
+<div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>os</span>
 <span class='kn'>from</span> <span class='nn'>hashlib</span> <span class='kn'>import</span> <span class='n'>sha1</span>
 
 
@@ -298,7 +300,9 @@ sudo pip install beautifulsoup4 requests dataset thready
 <h2 id='multithreading'>Multithreading</h2>
 
 <p>Up to this point, our script has only been capable of downloading a single missed connection at a time. It turns out that a single processor is capable of executing multiple tasks at a time via a process that&#8217;s called &#8221;<a href='http://en.wikipedia.org/wiki/Multithreading_(computer_architecture'>multithreading</a>).&#8221; This is different than <a href='http://en.wikipedia.org/wiki/Parallel_processing'>parallel processing</a> where a set of tasks are executed across across a series of networked computers. In the case of our task – scraping multiple missed connections – this means that instead of simply looping through the list of each missed connection, that we&#8217;ll first detect all the urls to the missed connection pages and then downloading and parse these pages across multiple threads. It turns out that, once again, <a href='http://twitter.com/pudo'>@pudo</a> has solved this problem for us. With a simple module he wrote named <a href='https://github.com/pudo/thready'>thready</a>, we can pass this list of urls to our function that scrapes each missed connection and very quickly and easily increase the speed with which we parse all the pages. This is implemented by modifying our <code>scrape_missed_connections</code> function as follows:</p>
-<br /><div class='highlight'><pre><code class='python'><span class='kn'>from</span> <span class='nn'>thready</span> <span class='kn'>import</span> <span class='n'>threaded</span>
+<br />
+<h4 id='03multithreadingpy'>03-multithreading.py</h4>
+<div class='highlight'><pre><code class='python'><span class='kn'>from</span> <span class='nn'>thready</span> <span class='kn'>import</span> <span class='n'>threaded</span>
 
 <span class='o'>...</span>
 

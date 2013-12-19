@@ -218,6 +218,7 @@ To implement this, we need to write a function that checks whether we've already
 
 <br/>
 
+#### 02-caching.py
 {% highlight python %}
 import os
 from hashlib import sha1
@@ -280,6 +281,7 @@ Up to this point, our script has only been capable of downloading a single misse
 
 <br/>
 
+#### 03-multithreading.py
 {% highlight python %}
 from thready import threaded
 
