@@ -4,7 +4,7 @@
  <title>brian abelson</title>
  <link href="http://brianabelson.com/atom.xml" rel="self"/>
  <link href="http://brianabelson.com/"/>
- <updated>2013-12-18T19:43:51-05:00</updated>
+ <updated>2013-12-18T20:23:01-05:00</updated>
  <id>http://brianabelson.com/</id>
 
  
@@ -15,30 +15,32 @@
    <id>http://brianabelson.com//open-news/2013/12/17/scrape-the-gibson</id>
    <content type="html">&lt;p&gt;&lt;em&gt;Most of the code in this post is based on &lt;a href='https://github.com/pudo/hhba-scraping'&gt;a workshop&lt;/a&gt; my fellow ex-OpenNews fellow &lt;a href='http://www.twitter.com/pudo'&gt;@pudo&lt;/a&gt; gave at &lt;a href='http://www.mediaparty.info'&gt;Hacks Hackers Buenos Aires Media Party&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;br /&gt;
-&lt;p&gt;Two years ago, I learned I had superpowers. &lt;a href='http://www.twitter.com/spatiality'&gt;Steve Romalewski&lt;/a&gt; was working on some &lt;a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'&gt;fascinating&lt;/a&gt; &lt;a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'&gt;analyses&lt;/a&gt; of CitiBike locations and needed some help scraping information from the city&amp;#8217;s portal. Cobbling together the little I knew about &lt;code&gt;R&lt;/code&gt;, I wrote &lt;a href='https://gist.github.com/abelsonlive/2690803'&gt;a simple scraper&lt;/a&gt; to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from &lt;em&gt;Hackers&lt;/em&gt;:&lt;/p&gt;
+&lt;p&gt;Two years ago, I learned I had superpowers. &lt;a href='http://www.twitter.com/spatiality'&gt;Steve Romalewski&lt;/a&gt; was working on some &lt;a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'&gt;fascinating&lt;/a&gt; &lt;a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'&gt;analyses&lt;/a&gt; of CitiBike locations and needed some help scraping information from the city&amp;#8217;s data portal. Cobbling together the little I knew about &lt;code&gt;R&lt;/code&gt;, I wrote &lt;a href='https://gist.github.com/abelsonlive/2690803'&gt;a simple scraper&lt;/a&gt; to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from &lt;em&gt;Hackers&lt;/em&gt;:&lt;/p&gt;
 &lt;br /&gt;&lt;iframe height='360' src='//www.youtube.com/embed/vYNnPx8fZBs' width='640'&gt;
 &lt;/iframe&gt;&lt;br /&gt;&lt;br /&gt;
-&lt;p&gt;Ever since then I&amp;#8217;ve spent a good portion of my life scraping data from websites. From &lt;a href='http://www.imdb.com/'&gt;movies&lt;/a&gt;, to &lt;a href='http://macaulaylibrary.org/'&gt;bird sounds&lt;/a&gt;, to &lt;a href='http://newyork.craigslist.org/mis/index.html'&gt;missed connections&lt;/a&gt;, and &lt;a href='http://eccie.net'&gt;john boards&lt;/a&gt; (don&amp;#8217;t ask, I promise it&amp;#8217;s for good!), there&amp;#8217;s not much I haven&amp;#8217;t tried to scrape. In many cases, I haven&amp;#8217;t even analyzed the data I&amp;#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.&lt;/p&gt;
+&lt;p&gt;Ever since then I&amp;#8217;ve spent a good portion of my life scraping data from websites. From &lt;a href='http://www.imdb.com/'&gt;movies&lt;/a&gt;, to &lt;a href='http://macaulaylibrary.org/'&gt;bird sounds&lt;/a&gt;, to &lt;a href='http://newyork.craigslist.org/mis/index.html'&gt;missed connections&lt;/a&gt;, and &lt;a href='http://eccie.net'&gt;john boards&lt;/a&gt; (don&amp;#8217;t ask, I promise it&amp;#8217;s for good!), there&amp;#8217;s not much I haven&amp;#8217;t tried to scrape. In many cases, I dont&amp;#8217;t even analyze the data I&amp;#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.&lt;/p&gt;
 &lt;br /&gt;
-&lt;p&gt;In that time, I&amp;#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&amp;#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with &lt;code&gt;R&lt;/code&gt;&amp;#8217;s error handling that I just wrote &lt;a href='https://github.com/abelsonlive/scraply'&gt;my own library&lt;/a&gt; to do it. In the past year, I&amp;#8217;ve started using &lt;code&gt;python&lt;/code&gt; for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow &lt;a href='http://twitter.com/pudo'&gt;Friedrich Lindenberg&lt;/a&gt;. In this post I hope to share some of this knowledge.&lt;/p&gt;
+&lt;p&gt;In this time, I&amp;#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&amp;#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with &lt;code&gt;R&lt;/code&gt;&amp;#8217;s error handling that I just wrote &lt;a href='https://github.com/abelsonlive/scraply'&gt;my own library&lt;/a&gt; to do it. In the past year, however, I&amp;#8217;ve started using &lt;code&gt;python&lt;/code&gt; for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow &lt;a href='http://twitter.com/pudo'&gt;Friedrich Lindenberg&lt;/a&gt;. In this post I hope to share some of this knowledge.&lt;/p&gt;
 &lt;br /&gt;
 &lt;h2 id='basics'&gt;Basics&lt;/h2&gt;
 
 &lt;p&gt;There are many amazing libraries for parsing HTML in python – &lt;a href='https://github.com/gawel/pyquery'&gt;pyquery&lt;/a&gt;, &lt;a href='http://scrapy.org/'&gt;scrapy&lt;/a&gt;, and &lt;a href='http://pythonhosted.org/cssselect/'&gt;cssselect&lt;/a&gt; to name a few – but I&amp;#8217;ve always preferred &lt;a href='http://www.crummy.com/software/BeautifulSoup/bs4/doc/'&gt;BeautifulSoup&lt;/a&gt; for it&amp;#8217;s deceptive simplicity. Below, we&amp;#8217;ll walk through a simple example of scraping missed connections from CraigsList. As I further develop and refine this code, I&amp;#8217;ll introduce some best practices I&amp;#8217;ve learned from &lt;a href='http://twitter.com/pudo'&gt;@pudo&lt;/a&gt;.&lt;/p&gt;
 &lt;br /&gt;
-&lt;p&gt;Let&amp;#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on computer you&amp;#8217;ll need to have two python modules installed: requests and BeautifulSoup. To install these, you can run this command in your terminal:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;sudo pip install beautifulsoup4 requests
+&lt;p&gt;Let&amp;#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on your computer you&amp;#8217;ll need to have four python modules installed: requests, BeautifulSoup, dataset, and thready. To install these, you can run this command in your terminal:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;sudo pip install beautifulsoup4 requests dataset thready
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If this returns and error, try installing pip and running the command again:&lt;/p&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='bash'&gt;sudo easy_install pip
-sudo pip install beautifulsoup4 requests
+sudo pip install beautifulsoup4 requests dataset thready
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If everything works you should be able to open a python terminal and import the libraries with no errors:&lt;/p&gt;
 &lt;br /&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='pycon'&gt;&lt;span class='go'&gt;python&lt;/span&gt;
 &lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;requests&lt;/span&gt;
 &lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;bs4&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;BeautifulSoup&lt;/span&gt;
+&lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;dataset&lt;/span&gt;
+&lt;span class='gp'&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;thready&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;thereaded&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
-&lt;p&gt;Alright, now that we&amp;#8217;re set, let&amp;#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet I add comments for each line. You can follow along with each of these scripts on &lt;a href='https://github.com/abelsonlive/scrape-the-gibson'&gt;the github repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Alright, now that we&amp;#8217;re ready to get started, let&amp;#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet below I add detailed comments that explain what I&amp;#8217;m doing for each line. You can follow along with each of these scripts on &lt;a href='https://github.com/abelsonlive/scrape-the-gibson'&gt;this github repository&lt;/a&gt;.&lt;/p&gt;
 &lt;br /&gt;
 &lt;h4 id='00basicspy'&gt;00-basics.py&lt;/h4&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;requests&lt;/span&gt;
@@ -138,7 +140,7 @@ sudo pip install beautifulsoup4 requests
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;h2 id='databases'&gt;Databases&lt;/h2&gt;
 
-&lt;p&gt;We could stop here and probably be fine, but it&amp;#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we could also quickly construct an api or app on top of the data we scrape. Luckily, &lt;a href='http://www.twitter.com/'&gt;@pudo&lt;/a&gt; wrote an amazing python library called &lt;a href='http://dataset.readthedocs.org'&gt;dataset&lt;/a&gt; that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:&lt;/p&gt;
+&lt;p&gt;We could stop here and probably be fine, but it&amp;#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we can also quickly construct an API or app on top of the data we scrape. Luckily, &lt;a href='http://www.twitter.com/'&gt;@pudo&lt;/a&gt; wrote an amazing python library called &lt;a href='http://dataset.readthedocs.org'&gt;dataset&lt;/a&gt; that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:&lt;/p&gt;
 &lt;br /&gt;
 &lt;h4 id='01datasetpy'&gt;&lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'&gt;01-dataset.py&lt;/a&gt;&lt;/h4&gt;
 &lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;dataset&lt;/span&gt;
@@ -146,7 +148,7 @@ sudo pip install beautifulsoup4 requests
 &lt;span class='c'&gt;# connect to a database&lt;/span&gt;
 
 &lt;span class='c'&gt;# here we&amp;#39;re just going to use sqlite3 which is a lightweight&lt;/span&gt;
-&lt;span class='c'&gt;# SQL store, ideal for simple scraping jobs.  However, we could&lt;/span&gt;
+&lt;span class='c'&gt;# SQL store, ideal for most simple scraping jobs.  However, we could&lt;/span&gt;
 &lt;span class='c'&gt;# easily use MySQL or PostgreSQL by simply swapping out the path&lt;/span&gt;
 &lt;span class='c'&gt;# to the database:&lt;/span&gt;
 
@@ -169,10 +171,10 @@ sudo pip install beautifulsoup4 requests
 &lt;br /&gt;
 &lt;h2 id='caching'&gt;Caching&lt;/h2&gt;
 
-&lt;p&gt;One of the most common scraping problems is having your script break midway through execution and having to start over from scratch. This isn&amp;#8217;t too big of a problem if you&amp;#8217;re scraping a few pages, but if you&amp;#8217;re trying to pull in everything from IMDB or CraigsList, you&amp;#8217;ll slowly drive yourself insane when, three hours into a job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&amp;#8217;re scraping (in other words, to save them to a local file).&lt;/p&gt;
+&lt;p&gt;One of the most common scraping problems is realizing your script is buggy midway through execution and having to start over from scratch. This isn&amp;#8217;t too big of a problem if you&amp;#8217;re scraping a few pages, but if you&amp;#8217;re trying to pull in everything from IMDB or CraigsList, you&amp;#8217;ll slowly drive yourself insane when, three hours into a big job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&amp;#8217;re scraping (in other words, save them to a local file).&lt;/p&gt;
 &lt;br /&gt;
 &lt;p&gt;To implement this, we need to write a function that checks whether we&amp;#8217;ve already saved a local version of the page already and, if so, load the cached version rather than hitting the site&amp;#8217;s server again. If not, we&amp;#8217;ll proceed as normal and request the page from the site&amp;#8217;s server and then save a version of it locally:&lt;/p&gt;
-&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;os&lt;/span&gt;
+&lt;br /&gt;&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;os&lt;/span&gt;
 &lt;span class='kn'&gt;from&lt;/span&gt; &lt;span class='nn'&gt;hashlib&lt;/span&gt; &lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='n'&gt;sha1&lt;/span&gt;
 
 
@@ -218,7 +220,7 @@ sudo pip install beautifulsoup4 requests
         &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;response&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;
         &lt;span class='n'&gt;store_local&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
     &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;br /&gt;
 &lt;p&gt;Now, everytime we request a new missed connection, we should use our &lt;code&gt;get_content&lt;/code&gt; function instead of &lt;code&gt;requests.get()&lt;/code&gt;. Merging this code in, our script should now look &lt;a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/02-caching.py'&gt;this&lt;/a&gt;.&lt;/p&gt;
 &lt;br /&gt;
 &lt;h2 id='multithreading'&gt;Multithreading&lt;/h2&gt;

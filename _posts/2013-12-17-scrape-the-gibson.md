@@ -10,7 +10,7 @@ _Most of the code in this post is based on [a workshop](https://github.com/pudo/
 
 <br/>
 
-Two years ago, I learned I had superpowers. [Steve Romalewski](http://www.twitter.com/spatiality) was working on some [fascinating](http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/) [analyses](http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/) of CitiBike locations and needed some help scraping information from the city's portal.  Cobbling together the little I knew about `R`, I wrote [a simple scraper](https://gist.github.com/abelsonlive/2690803) to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from _Hackers_:
+Two years ago, I learned I had superpowers. [Steve Romalewski](http://www.twitter.com/spatiality) was working on some [fascinating](http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/) [analyses](http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/) of CitiBike locations and needed some help scraping information from the city's data portal.  Cobbling together the little I knew about `R`, I wrote [a simple scraper](https://gist.github.com/abelsonlive/2690803) to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from _Hackers_:
 
 <br/>
 
@@ -20,11 +20,11 @@ Two years ago, I learned I had superpowers. [Steve Romalewski](http://www.twitte
 <br/>
 <br/>
 
-Ever since then I've spent a good portion of my life scraping data from websites.  From [movies](http://www.imdb.com/), to [bird sounds](http://macaulaylibrary.org/), to [missed connections](http://newyork.craigslist.org/mis/index.html), and [john boards](http://eccie.net) (don't ask, I promise it's for good!), there's not much I haven't tried to scrape.  In many cases, I haven't even analyzed the data I've obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.
+Ever since then I've spent a good portion of my life scraping data from websites.  From [movies](http://www.imdb.com/), to [bird sounds](http://macaulaylibrary.org/), to [missed connections](http://newyork.craigslist.org/mis/index.html), and [john boards](http://eccie.net) (don't ask, I promise it's for good!), there's not much I haven't tried to scrape.  In many cases, I dont't even analyze the data I've obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.
 
 <br/>
 
-In that time, I've learned a lot about what not to do when scraping websites.  This trial-and-error process has involved, among other fiascos, having my office's IP address permanently banned from IMDB.  At one point, I got so frustrated with `R`'s error handling that I just wrote [my own library](https://github.com/abelsonlive/scraply) to do it.  In the past year, I've started using `python` for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow [Friedrich Lindenberg](http://twitter.com/pudo).  In this post I hope to share some of this knowledge.
+In this time, I've learned a lot about what not to do when scraping websites.  This trial-and-error process has involved, among other fiascos, having my office's IP address permanently banned from IMDB.  At one point, I got so frustrated with `R`'s error handling that I just wrote [my own library](https://github.com/abelsonlive/scraply) to do it.  In the past year, however, I've started using `python` for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow [Friedrich Lindenberg](http://twitter.com/pudo).  In this post I hope to share some of this knowledge.
 
 <br/>
 
@@ -34,17 +34,17 @@ There are many amazing libraries for parsing HTML in python  –  [pyquery](http
 
 <br/>
 
-Let's go through a simple example of retrieving missed connections from craigslist. To run the code on computer you'll need to have two python modules installed: requests and BeautifulSoup.  To install these, you can run this command in your terminal:
+Let's go through a simple example of retrieving missed connections from craigslist. To run the code on your computer you'll need to have four python modules installed: requests, BeautifulSoup, dataset, and thready.  To install these, you can run this command in your terminal:
 
 {% highlight bash %}
-sudo pip install beautifulsoup4 requests
+sudo pip install beautifulsoup4 requests dataset thready
 {% endhighlight %}
 
 If this returns and error, try installing pip and running the command again:
 
 {% highlight bash %}
 sudo easy_install pip
-sudo pip install beautifulsoup4 requests
+sudo pip install beautifulsoup4 requests dataset thready
 {% endhighlight %}
 
 If everything works you should be able to open a python terminal and import the libraries with no errors:
@@ -55,11 +55,13 @@ If everything works you should be able to open a python terminal and import the 
 python
 >>> import requests
 >>> from bs4 import BeautifulSoup
+>>> import dataset
+>>> from thready import thereaded
 {% endhighlight %}
 
 <br/>
 
-Alright, now that we're set, let's walk through a basic scraper for CraigsList missed connections. In the code snippet I add comments for each line. You can follow along with each of these scripts on [the github repository](https://github.com/abelsonlive/scrape-the-gibson).
+Alright, now that we're ready to get started, let's walk through a basic scraper for CraigsList missed connections. In the code snippet below I add detailed comments that explain what I'm doing for each line. You can follow along with each of these scripts on [this github repository](https://github.com/abelsonlive/scrape-the-gibson).
 
 <br/>
 #### 00-basics.py
@@ -170,7 +172,7 @@ If all goes well you should see a series of python dictionaries printed to your 
 
 ## Databases
 
-We could stop here and probably be fine, but it's usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point.  In addition, by using a database, we could also quickly construct an api or app on top of the data we scrape. Luckily, [@pudo](http://www.twitter.com/) wrote an amazing python library called [dataset](http://dataset.readthedocs.org) that makes writing to a database as easy as writing json to a file.  To incorporate it into our script, we only need to change three lines:
+We could stop here and probably be fine, but it's usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point.  In addition, by using a database, we can also quickly construct an API or app on top of the data we scrape. Luckily, [@pudo](http://www.twitter.com/) wrote an amazing python library called [dataset](http://dataset.readthedocs.org) that makes writing to a database as easy as writing json to a file.  To incorporate it into our script, we only need to change three lines:
 
 <br/>
 
@@ -181,7 +183,7 @@ import dataset
 # connect to a database
 
 # here we're just going to use sqlite3 which is a lightweight
-# SQL store, ideal for simple scraping jobs.  However, we could
+# SQL store, ideal for most simple scraping jobs.  However, we could
 # easily use MySQL or PostgreSQL by simply swapping out the path
 # to the database:
 
@@ -208,11 +210,13 @@ Putting it all together, our new script should look something like [this](https:
 
 ## Caching 
 
-One of the most common scraping problems is having your script break midway through execution and having to start over from scratch. This isn't too big of a problem if you're scraping a few pages, but if you're trying to pull in everything from IMDB or CraigsList, you'll slowly drive yourself insane when, three hours into a job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you're scraping (in other words, to save them to a local file).
+One of the most common scraping problems is realizing your script is buggy midway through execution and having to start over from scratch. This isn't too big of a problem if you're scraping a few pages, but if you're trying to pull in everything from IMDB or CraigsList, you'll slowly drive yourself insane when, three hours into a big job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you're scraping (in other words, save them to a local file).
 
 <br/>
 
 To implement this, we need to write a function that checks whether we've already saved a local version of the page already and, if so, load the cached version rather than hitting the site's server again. If not, we'll proceed as normal and request the page from the site's server and then save a version of it locally:
+
+<br/>
 
 {% highlight python %}
 import os
@@ -263,6 +267,8 @@ def get_content(url):
     return content
 
 {% endhighlight %}
+
+<br/>
 
 Now, everytime we request a new missed connection, we should use our `get_content` function instead of `requests.get()`.  Merging this code in, our script should now look [this](https://github.com/abelsonlive/scrape-the-gibson/blob/master/02-caching.py).
 

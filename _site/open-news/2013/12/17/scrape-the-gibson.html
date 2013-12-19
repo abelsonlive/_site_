@@ -87,30 +87,32 @@
     </header>
     <section class="entry"><p><em>Most of the code in this post is based on <a href='https://github.com/pudo/hhba-scraping'>a workshop</a> my fellow ex-OpenNews fellow <a href='http://www.twitter.com/pudo'>@pudo</a> gave at <a href='http://www.mediaparty.info'>Hacks Hackers Buenos Aires Media Party</a>.</em></p>
 <br />
-<p>Two years ago, I learned I had superpowers. <a href='http://www.twitter.com/spatiality'>Steve Romalewski</a> was working on some <a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'>fascinating</a> <a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'>analyses</a> of CitiBike locations and needed some help scraping information from the city&#8217;s portal. Cobbling together the little I knew about <code>R</code>, I wrote <a href='https://gist.github.com/abelsonlive/2690803'>a simple scraper</a> to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from <em>Hackers</em>:</p>
+<p>Two years ago, I learned I had superpowers. <a href='http://www.twitter.com/spatiality'>Steve Romalewski</a> was working on some <a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'>fascinating</a> <a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'>analyses</a> of CitiBike locations and needed some help scraping information from the city&#8217;s data portal. Cobbling together the little I knew about <code>R</code>, I wrote <a href='https://gist.github.com/abelsonlive/2690803'>a simple scraper</a> to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from <em>Hackers</em>:</p>
 <br /><iframe height='360' src='//www.youtube.com/embed/vYNnPx8fZBs' width='640'>
 </iframe><br /><br />
-<p>Ever since then I&#8217;ve spent a good portion of my life scraping data from websites. From <a href='http://www.imdb.com/'>movies</a>, to <a href='http://macaulaylibrary.org/'>bird sounds</a>, to <a href='http://newyork.craigslist.org/mis/index.html'>missed connections</a>, and <a href='http://eccie.net'>john boards</a> (don&#8217;t ask, I promise it&#8217;s for good!), there&#8217;s not much I haven&#8217;t tried to scrape. In many cases, I haven&#8217;t even analyzed the data I&#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.</p>
+<p>Ever since then I&#8217;ve spent a good portion of my life scraping data from websites. From <a href='http://www.imdb.com/'>movies</a>, to <a href='http://macaulaylibrary.org/'>bird sounds</a>, to <a href='http://newyork.craigslist.org/mis/index.html'>missed connections</a>, and <a href='http://eccie.net'>john boards</a> (don&#8217;t ask, I promise it&#8217;s for good!), there&#8217;s not much I haven&#8217;t tried to scrape. In many cases, I dont&#8217;t even analyze the data I&#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.</p>
 <br />
-<p>In that time, I&#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with <code>R</code>&#8217;s error handling that I just wrote <a href='https://github.com/abelsonlive/scraply'>my own library</a> to do it. In the past year, I&#8217;ve started using <code>python</code> for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow <a href='http://twitter.com/pudo'>Friedrich Lindenberg</a>. In this post I hope to share some of this knowledge.</p>
+<p>In this time, I&#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with <code>R</code>&#8217;s error handling that I just wrote <a href='https://github.com/abelsonlive/scraply'>my own library</a> to do it. In the past year, however, I&#8217;ve started using <code>python</code> for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow <a href='http://twitter.com/pudo'>Friedrich Lindenberg</a>. In this post I hope to share some of this knowledge.</p>
 <br />
 <h2 id='basics'>Basics</h2>
 
 <p>There are many amazing libraries for parsing HTML in python – <a href='https://github.com/gawel/pyquery'>pyquery</a>, <a href='http://scrapy.org/'>scrapy</a>, and <a href='http://pythonhosted.org/cssselect/'>cssselect</a> to name a few – but I&#8217;ve always preferred <a href='http://www.crummy.com/software/BeautifulSoup/bs4/doc/'>BeautifulSoup</a> for it&#8217;s deceptive simplicity. Below, we&#8217;ll walk through a simple example of scraping missed connections from CraigsList. As I further develop and refine this code, I&#8217;ll introduce some best practices I&#8217;ve learned from <a href='http://twitter.com/pudo'>@pudo</a>.</p>
 <br />
-<p>Let&#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on computer you&#8217;ll need to have two python modules installed: requests and BeautifulSoup. To install these, you can run this command in your terminal:</p>
-<div class='highlight'><pre><code class='bash'>sudo pip install beautifulsoup4 requests
+<p>Let&#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on your computer you&#8217;ll need to have four python modules installed: requests, BeautifulSoup, dataset, and thready. To install these, you can run this command in your terminal:</p>
+<div class='highlight'><pre><code class='bash'>sudo pip install beautifulsoup4 requests dataset thready
 </code></pre></div>
 <p>If this returns and error, try installing pip and running the command again:</p>
 <div class='highlight'><pre><code class='bash'>sudo easy_install pip
-sudo pip install beautifulsoup4 requests
+sudo pip install beautifulsoup4 requests dataset thready
 </code></pre></div>
 <p>If everything works you should be able to open a python terminal and import the libraries with no errors:</p>
 <br /><div class='highlight'><pre><code class='pycon'><span class='go'>python</span>
 <span class='gp'>&gt;&gt;&gt; </span><span class='kn'>import</span> <span class='nn'>requests</span>
 <span class='gp'>&gt;&gt;&gt; </span><span class='kn'>from</span> <span class='nn'>bs4</span> <span class='kn'>import</span> <span class='n'>BeautifulSoup</span>
+<span class='gp'>&gt;&gt;&gt; </span><span class='kn'>import</span> <span class='nn'>dataset</span>
+<span class='gp'>&gt;&gt;&gt; </span><span class='kn'>from</span> <span class='nn'>thready</span> <span class='kn'>import</span> <span class='n'>thereaded</span>
 </code></pre></div><br />
-<p>Alright, now that we&#8217;re set, let&#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet I add comments for each line. You can follow along with each of these scripts on <a href='https://github.com/abelsonlive/scrape-the-gibson'>the github repository</a>.</p>
+<p>Alright, now that we&#8217;re ready to get started, let&#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet below I add detailed comments that explain what I&#8217;m doing for each line. You can follow along with each of these scripts on <a href='https://github.com/abelsonlive/scrape-the-gibson'>this github repository</a>.</p>
 <br />
 <h4 id='00basicspy'>00-basics.py</h4>
 <div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>requests</span>
@@ -210,7 +212,7 @@ sudo pip install beautifulsoup4 requests
 </code></pre></div><br />
 <h2 id='databases'>Databases</h2>
 
-<p>We could stop here and probably be fine, but it&#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we could also quickly construct an api or app on top of the data we scrape. Luckily, <a href='http://www.twitter.com/'>@pudo</a> wrote an amazing python library called <a href='http://dataset.readthedocs.org'>dataset</a> that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:</p>
+<p>We could stop here and probably be fine, but it&#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we can also quickly construct an API or app on top of the data we scrape. Luckily, <a href='http://www.twitter.com/'>@pudo</a> wrote an amazing python library called <a href='http://dataset.readthedocs.org'>dataset</a> that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:</p>
 <br />
 <h4 id='01datasetpy'><a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'>01-dataset.py</a></h4>
 <div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>dataset</span>
@@ -218,7 +220,7 @@ sudo pip install beautifulsoup4 requests
 <span class='c'># connect to a database</span>
 
 <span class='c'># here we&#39;re just going to use sqlite3 which is a lightweight</span>
-<span class='c'># SQL store, ideal for simple scraping jobs.  However, we could</span>
+<span class='c'># SQL store, ideal for most simple scraping jobs.  However, we could</span>
 <span class='c'># easily use MySQL or PostgreSQL by simply swapping out the path</span>
 <span class='c'># to the database:</span>
 
@@ -241,10 +243,10 @@ sudo pip install beautifulsoup4 requests
 <br />
 <h2 id='caching'>Caching</h2>
 
-<p>One of the most common scraping problems is having your script break midway through execution and having to start over from scratch. This isn&#8217;t too big of a problem if you&#8217;re scraping a few pages, but if you&#8217;re trying to pull in everything from IMDB or CraigsList, you&#8217;ll slowly drive yourself insane when, three hours into a job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&#8217;re scraping (in other words, to save them to a local file).</p>
+<p>One of the most common scraping problems is realizing your script is buggy midway through execution and having to start over from scratch. This isn&#8217;t too big of a problem if you&#8217;re scraping a few pages, but if you&#8217;re trying to pull in everything from IMDB or CraigsList, you&#8217;ll slowly drive yourself insane when, three hours into a big job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&#8217;re scraping (in other words, save them to a local file).</p>
 <br />
 <p>To implement this, we need to write a function that checks whether we&#8217;ve already saved a local version of the page already and, if so, load the cached version rather than hitting the site&#8217;s server again. If not, we&#8217;ll proceed as normal and request the page from the site&#8217;s server and then save a version of it locally:</p>
-<div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>os</span>
+<br /><div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>os</span>
 <span class='kn'>from</span> <span class='nn'>hashlib</span> <span class='kn'>import</span> <span class='n'>sha1</span>
 
 
@@ -290,7 +292,7 @@ sudo pip install beautifulsoup4 requests
         <span class='n'>content</span> <span class='o'>=</span> <span class='n'>response</span><span class='o'>.</span><span class='n'>content</span>
         <span class='n'>store_local</span><span class='p'>(</span><span class='n'>url</span><span class='p'>,</span> <span class='n'>content</span><span class='p'>)</span>
     <span class='k'>return</span> <span class='n'>content</span>
-</code></pre></div>
+</code></pre></div><br />
 <p>Now, everytime we request a new missed connection, we should use our <code>get_content</code> function instead of <code>requests.get()</code>. Merging this code in, our script should now look <a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/02-caching.py'>this</a>.</p>
 <br />
 <h2 id='multithreading'>Multithreading</h2>
