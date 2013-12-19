@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+        <script src="http://csvsoundsystem.com/csv.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/js/shadowbox.js"></script>
+        <title>Scrape the Gibson: Python skills for data scrapers</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/css/app.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/icon.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="/css/accessibility_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/general_enclosed_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/social_foundicons.css" type="text/css" />
+        <link rel="stylesheet" href="/css/shadowbox.css" type="text/css" />
+        <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="/img/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-9282817-3']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+        <script type="text/javascript">
+            Shadowbox.init();
+        </script>
+    </head>
+    <body>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <div class="container">
+        <div class="block" >
+        <a href="mailto:brianabelson@gmail.com" target="_blank">EMAIL  @ </a>
+        <br>
+        <a href="http://www.twitter.com/brianabelson" target="_blank">TWITTER  <span class="icon"><i class="foundicon-twitter"></i></span>
+        </a>
+        <br>
+        <a href="http://www.github.com/abelsonlive" target="_blank">GITHUB
+        <span class="icon"><i class="foundicon-github"></i></span>
+        </a>
+        <br>
+        <a href="/atom.xml" target="_blank">RSS
+        <span class="icon"> <i class="foundicon-rss"></i></span>
+        </a>
+        <br>
+        <a href="/about"><span class="icon">ABOUT ??</span></a>
+        <br>
+        <a href="/"><span class="icon">HOME //</span></a>
+        <br>
+    </div>
+        <div class="row">
+            <div id="small-logo"><a href="/"><img src="/img/logo.png"></a></div>
+            <div class="span9" id="content">
+                <article>
+                <article>
+    <header>
+        <h1>Scrape the Gibson: Python skills for data scrapers</h1>
+        <div class="social">
+            <div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="200" data-show-faces="false" data-font="segoe ui"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="brianabelson">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+    </header>
+    <section class="entry"><p><em>Most of the code in this post is based on <a href='https://github.com/pudo/hhba-scraping'>a workshop</a> my fellow ex-OpenNews fellow <a href='http://www.twitter.com/pudo'>@pudo</a> gave at <a href='http://www.mediaparty.info'>Hacks Hackers Buenos Aires Media Party</a>.</em></p>
+<br />
+<p>Two years ago, I learned I had superpowers. <a href='http://www.twitter.com/spatiality'>Steve Romalewski</a> was working on some <a href='http://spatialityblog.com/2011/09/29/spatial-analysis-of-nyc-bikeshare-maps/'>fascinating</a> <a href='http://spatialityblog.com/2012/05/14/citibikenyc_firstlastmile_quantified/'>analyses</a> of CitiBike locations and needed some help scraping information from the city&#8217;s portal. Cobbling together the little I knew about <code>R</code>, I wrote <a href='https://gist.github.com/abelsonlive/2690803'>a simple scraper</a> to fetch the json files for each bike share location and output it as a csv. When I opened the clean data in Excel, the feeling was tantamount to this scene from <em>Hackers</em>:</p>
+<br /><iframe height='360' src='//www.youtube.com/embed/vYNnPx8fZBs' width='640'>
+</iframe><br /><br />
+<p>Ever since then I&#8217;ve spent a good portion of my life scraping data from websites. From <a href='http://www.imdb.com/'>movies</a>, to <a href='http://macaulaylibrary.org/'>bird sounds</a>, to <a href='http://newyork.craigslist.org/mis/index.html'>missed connections</a>, and <a href='http://eccie.net'>john boards</a> (don&#8217;t ask, I promise it&#8217;s for good!), there&#8217;s not much I haven&#8217;t tried to scrape. In many cases, I haven&#8217;t even analyzed the data I&#8217;ve obtained, and the whole process amounts to a nerdy version of sport hunting, with my comma-delimited trophies mounted proudly on Amazon S3.</p>
+<br />
+<p>In that time, I&#8217;ve learned a lot about what not to do when scraping websites. This trial-and-error process has involved, among other fiascos, having my office&#8217;s IP address permanently banned from IMDB. At one point, I got so frustrated with <code>R</code>&#8217;s error handling that I just wrote <a href='https://github.com/abelsonlive/scraply'>my own library</a> to do it. In the past year, I&#8217;ve started using <code>python</code> for scraping, and have learned a tremendous amount from my fellow ex-OpenNews Fellow <a href='http://twitter.com/pudo'>Friedrich Lindenberg</a>. In this post I hope to share some of this knowledge.</p>
+<br />
+<h2 id='basics'>Basics</h2>
+
+<p>There are many amazing libraries for parsing HTML in python – <a href='https://github.com/gawel/pyquery'>pyquery</a>, <a href='http://scrapy.org/'>scrapy</a>, and <a href='http://pythonhosted.org/cssselect/'>cssselect</a> to name a few – but I&#8217;ve always preferred <a href='http://www.crummy.com/software/BeautifulSoup/bs4/doc/'>BeautifulSoup</a> for it&#8217;s deceptive simplicity. Below, we&#8217;ll walk through a simple example of scraping missed connections from CraigsList. As I further develop and refine this code, I&#8217;ll introduce some best practices I&#8217;ve learned from <a href='http://twitter.com/pudo'>@pudo</a>.</p>
+<br />
+<p>Let&#8217;s go through a simple example of retrieving missed connections from craigslist. To run the code on computer you&#8217;ll need to have two python modules installed: requests and BeautifulSoup. To install these, you can run this command in your terminal:</p>
+<div class='highlight'><pre><code class='bash'>sudo pip install beautifulsoup4 requests
+</code></pre></div>
+<p>If this returns and error, try installing pip and running the command again:</p>
+<div class='highlight'><pre><code class='bash'>sudo easy_install pip
+sudo pip install beautifulsoup4 requests
+</code></pre></div>
+<p>If everything works you should be able to open a python terminal and import the libraries with no errors:</p>
+<br /><div class='highlight'><pre><code class='pycon'><span class='go'>python</span>
+<span class='gp'>&gt;&gt;&gt; </span><span class='kn'>import</span> <span class='nn'>requests</span>
+<span class='gp'>&gt;&gt;&gt; </span><span class='kn'>from</span> <span class='nn'>bs4</span> <span class='kn'>import</span> <span class='n'>BeautifulSoup</span>
+</code></pre></div><br />
+<p>Alright, now that we&#8217;re set, let&#8217;s walk through a basic scraper for CraigsList missed connections. In the code snippet I add comments for each line. You can follow along with each of these scripts on <a href='https://github.com/abelsonlive/scrape-the-gibson'>the github repository</a>.</p>
+<br />
+<h4 id='00basicspy'>00-basics.py</h4>
+<div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>requests</span>
+<span class='kn'>from</span> <span class='nn'>bs4</span> <span class='kn'>import</span> <span class='n'>BeautifulSoup</span>
+<span class='kn'>from</span> <span class='nn'>pprint</span> <span class='kn'>import</span> <span class='n'>pprint</span>
+<span class='kn'>from</span> <span class='nn'>urlparse</span> <span class='kn'>import</span> <span class='n'>urljoin</span>
+
+<span class='c'># The base url for craigslist in New York</span>
+<span class='n'>BASE_URL</span> <span class='o'>=</span> <span class='s'>&#39;http://newyork.craigslist.org/&#39;</span>
+
+<span class='k'>def</span> <span class='nf'>scrape_missed_connections</span><span class='p'>():</span>
+    <span class='sd'>&quot;&quot;&quot; Scrape all the missed connections from a list &quot;&quot;&quot;</span>
+    
+    <span class='c'># Download the list of missed connections</span>
+
+    <span class='c'># here were using requests, </span>
+    <span class='c'># a python library for accessing the web</span>
+
+    <span class='c'># we add &quot;mis/&quot; to the url to tell requests</span>
+    <span class='c'># to get the missed connections </span>
+    <span class='c'># on newyork.craigslist.org</span>
+
+    <span class='n'>response</span> <span class='o'>=</span> <span class='n'>requests</span><span class='o'>.</span><span class='n'>get</span><span class='p'>(</span><span class='n'>BASE_URL</span> <span class='o'>+</span> <span class='s'>&quot;mis/&quot;</span><span class='p'>)</span>
+
+    <span class='c'># parse HTML using Beautiful Soup</span>
+    <span class='c'># this returns a `soup` object which</span>
+    <span class='c'># gives us convenience methods for parsing html</span>
+
+    <span class='n'>soup</span> <span class='o'>=</span> <span class='n'>BeautifulSoup</span><span class='p'>(</span><span class='n'>response</span><span class='o'>.</span><span class='n'>content</span><span class='p'>)</span>
+
+    <span class='c'># find all the posts in the page.</span>
+
+    <span class='c'># here we&#39;re telling BeautifulSoup to get us every</span>
+    <span class='c'># span tag that has a class that equals pl</span>
+
+    <span class='c'># these tags might look something like this:</span>
+    <span class='c'># &lt;span class=&#39;pl&#39;&gt; {content} &lt;/span&gt;</span>
+
+    <span class='n'>missed_connections</span> <span class='o'>=</span> <span class='n'>soup</span><span class='o'>.</span><span class='n'>find_all</span><span class='p'>(</span><span class='s'>&#39;span&#39;</span><span class='p'>,</span> <span class='p'>{</span><span class='s'>&#39;class&#39;</span><span class='p'>:</span><span class='s'>&#39;pl&#39;</span><span class='p'>})</span>
+
+    <span class='c'># Get all the links to missed connection pages:</span>
+    <span class='k'>for</span> <span class='n'>missed_connection</span> <span class='ow'>in</span> <span class='n'>missed_connections</span><span class='p'>:</span>
+        
+        <span class='c'># for each span list, find the &quot;a&quot; tag which </span>
+        <span class='c'># represents the link to the missed connection page.</span>
+
+        <span class='n'>link</span> <span class='o'>=</span> <span class='n'>missed_connection</span><span class='o'>.</span><span class='n'>find</span><span class='p'>(</span><span class='s'>&#39;a&#39;</span><span class='p'>)</span><span class='o'>.</span><span class='n'>attrs</span><span class='p'>[</span><span class='s'>&#39;href&#39;</span><span class='p'>]</span>
+        
+        <span class='c'># join this relative link with the </span>
+        <span class='c'># BASE_URL to create an absolute link</span>
+
+        <span class='n'>url</span> <span class='o'>=</span> <span class='n'>urljoin</span><span class='p'>(</span><span class='n'>BASE_URL</span><span class='p'>,</span> <span class='n'>link</span><span class='p'>)</span>
+        
+        <span class='c'># pass this url to a function (defined below) to scrape </span>
+        <span class='c'># info about that missed connection</span>
+
+        <span class='n'>scrape_missed_connection</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+
+<span class='k'>def</span> <span class='nf'>scrape_missed_connection</span><span class='p'>(</span><span class='n'>url</span><span class='p'>):</span>
+    <span class='sd'>&quot;&quot;&quot; Extract information from a missed connections&#39;s page. &quot;&quot;&quot;</span>
+
+    <span class='c'># retrieve the missed connection with requests</span>
+
+    <span class='n'>response</span> <span class='o'>=</span> <span class='n'>requests</span><span class='o'>.</span><span class='n'>get</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+
+    <span class='c'># Parse the html of the missed connection post</span>
+
+    <span class='n'>soup</span> <span class='o'>=</span> <span class='n'>BeautifulSoup</span><span class='p'>(</span><span class='n'>response</span><span class='o'>.</span><span class='n'>content</span><span class='p'>)</span>
+
+    <span class='c'># Extract the actual contents of some HTML elements:</span>
+
+    <span class='c'># here were using BeautifulSoup&#39;s `text` method for retrieving</span>
+    <span class='c'># the plain text within each HTML element.</span>
+
+    <span class='c'># see and example of what this page looks like here:</span>
+
+    <span class='n'>data</span> <span class='o'>=</span> <span class='p'>{</span>
+        <span class='s'>&#39;source_url&#39;</span><span class='p'>:</span> <span class='n'>url</span><span class='p'>,</span>
+        <span class='s'>&#39;subject&#39;</span><span class='p'>:</span> <span class='n'>soup</span><span class='o'>.</span><span class='n'>find</span><span class='p'>(</span><span class='s'>&#39;h2&#39;</span><span class='p'>,</span> <span class='p'>{</span><span class='s'>&#39;class&#39;</span><span class='p'>:</span><span class='s'>&#39;postingtitle&#39;</span><span class='p'>})</span><span class='o'>.</span><span class='n'>text</span><span class='o'>.</span><span class='n'>strip</span><span class='p'>(),</span>
+        <span class='s'>&#39;body&#39;</span><span class='p'>:</span> <span class='n'>soup</span><span class='o'>.</span><span class='n'>find</span><span class='p'>(</span><span class='s'>&#39;section&#39;</span><span class='p'>,</span> <span class='p'>{</span><span class='s'>&#39;id&#39;</span><span class='p'>:</span><span class='s'>&#39;postingbody&#39;</span><span class='p'>})</span><span class='o'>.</span><span class='n'>text</span><span class='o'>.</span><span class='n'>strip</span><span class='p'>(),</span>
+        <span class='s'>&#39;datetime&#39;</span><span class='p'>:</span> <span class='n'>soup</span><span class='o'>.</span><span class='n'>find</span><span class='p'>(</span><span class='s'>&#39;time&#39;</span><span class='p'>)</span><span class='o'>.</span><span class='n'>attrs</span><span class='p'>[</span><span class='s'>&#39;datetime&#39;</span><span class='p'>]</span>
+    <span class='p'>}</span>
+
+    <span class='c'># Print it prettily. </span>
+    <span class='n'>pprint</span><span class='p'>(</span><span class='n'>data</span><span class='p'>)</span>
+
+<span class='k'>if</span> <span class='n'>__name__</span> <span class='o'>==</span> <span class='s'>&#39;__main__&#39;</span><span class='p'>:</span>
+    <span class='n'>scrape_missed_connections</span><span class='p'>()</span>
+</code></pre></div><br />
+<p>If all goes well you should see a series of python dictionaries printed to your console:</p>
+<div class='highlight'><pre><code class='pycon'><span class='go'>{</span>
+<span class='go'>    &#39;body&#39;: &#39;I saw you on your way home from work last night. I hoped to see you on the way to work this morning, and I did. Actually, I usually see you on the way to work. I wanted to say hello this morning, and I stupidly smiled at you wanting you to smile back. You looked at me in acknowledgement but that seemed about it. I will have to talk to you the next time I see you and tell you how cute you look in that hat you were wearing.&#39;,</span>
+<span class='go'>    &#39;datetime&#39;: &#39;2013-12-18T10:50:29-0500&#39;,</span>
+<span class='go'>    &#39;source_url&#39;: &#39;http://newyork.craigslist.org/brk/mis/4249329594.html&#39;,</span>
+<span class='go'>    &#39;subject&#39;: &#39;A train to work this morning - m4w&#39;</span>
+<span class='go'>}</span>
+</code></pre></div><br />
+<h2 id='databases'>Databases</h2>
+
+<p>We could stop here and probably be fine, but it&#8217;s usually a better idea to save the data you scrape into a database. This way, if the script breaks midway through execution, we can retain the information we scraped up until that point. In addition, by using a database, we could also quickly construct an api or app on top of the data we scrape. Luckily, <a href='http://www.twitter.com/'>@pudo</a> wrote an amazing python library called <a href='http://dataset.readthedocs.org'>dataset</a> that makes writing to a database as easy as writing json to a file. To incorporate it into our script, we only need to change three lines:</p>
+<br />
+<h4 id='01datasetpy'><a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'>01-dataset.py</a></h4>
+<div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>dataset</span>
+
+<span class='c'># connect to a database</span>
+
+<span class='c'># here we&#39;re just going to use sqlite3 which is a lightweight</span>
+<span class='c'># SQL store, ideal for simple scraping jobs.  However, we could</span>
+<span class='c'># easily use MySQL or PostgreSQL by simply swapping out the path</span>
+<span class='c'># to the database:</span>
+
+<span class='n'>db</span> <span class='o'>=</span> <span class='n'>dataset</span><span class='o'>.</span><span class='n'>connect</span><span class='p'>(</span><span class='s'>&#39;sqlite:///missed_connections.db&#39;</span><span class='p'>)</span>
+
+<span class='o'>...</span>
+
+<span class='c'># now instead of simply printing our data to the console,</span>
+<span class='c'># lets put it into our database</span>
+
+<span class='c'># here db[&#39;posts&#39;] signifies that we are going to insert data</span>
+<span class='c'># into the &#39;posts&#39; table of the database. We&#39;ll use &quot;upsert&quot;</span>
+<span class='c'># instead of &quot;insert&quot; because we&#39;ll probably want to run the</span>
+<span class='c'># scraper a few times to test it, and this way we won&#39;t continually</span>
+<span class='c'># add duplicate records to our database.</span>
+
+<span class='n'>db</span><span class='p'>[</span><span class='s'>&#39;posts&#39;</span><span class='p'>]</span><span class='o'>.</span><span class='n'>upsert</span><span class='p'>(</span><span class='n'>data</span><span class='p'>,</span> <span class='p'>[</span><span class='s'>&#39;source_url&#39;</span><span class='p'>])</span>
+</code></pre></div>
+<p>Putting it all together, our new script should look something like <a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/01-dataset.py'>this</a>.</p>
+<br />
+<h2 id='caching'>Caching</h2>
+
+<p>One of the most common scraping problems is having your script break midway through execution and having to start over from scratch. This isn&#8217;t too big of a problem if you&#8217;re scraping a few pages, but if you&#8217;re trying to pull in everything from IMDB or CraigsList, you&#8217;ll slowly drive yourself insane when, three hours into a job, you realize you forgot to grab an important piece of data. One easy way to deal with this problem is to cache the html files that you&#8217;re scraping (in other words, to save them to a local file).</p>
+<br />
+<p>To implement this, we need to write a function that checks whether we&#8217;ve already saved a local version of the page already and, if so, load the cached version rather than hitting the site&#8217;s server again. If not, we&#8217;ll proceed as normal and request the page from the site&#8217;s server and then save a version of it locally:</p>
+<div class='highlight'><pre><code class='python'><span class='kn'>import</span> <span class='nn'>os</span>
+<span class='kn'>from</span> <span class='nn'>hashlib</span> <span class='kn'>import</span> <span class='n'>sha1</span>
+
+
+<span class='c'># a directory for caching file&#39;s we&#39;ve already downloaded</span>
+<span class='n'>CACHE_DIR</span> <span class='o'>=</span> <span class='n'>os</span><span class='o'>.</span><span class='n'>path</span><span class='o'>.</span><span class='n'>join</span><span class='p'>(</span><span class='n'>os</span><span class='o'>.</span><span class='n'>path</span><span class='o'>.</span><span class='n'>dirname</span><span class='p'>(</span><span class='n'>__file__</span><span class='p'>),</span> <span class='s'>&#39;cache&#39;</span><span class='p'>)</span>
+
+<span class='k'>def</span> <span class='nf'>url_to_filename</span><span class='p'>(</span><span class='n'>url</span><span class='p'>):</span>
+    <span class='sd'>&quot;&quot;&quot; Make a URL into a file name, using SHA1 hashes. &quot;&quot;&quot;</span>
+
+    <span class='c'># use a sha1 hash to convert the url into a unique filename</span>
+    <span class='n'>hash_file</span> <span class='o'>=</span> <span class='n'>sha1</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span><span class='o'>.</span><span class='n'>hexdigest</span><span class='p'>()</span> <span class='o'>+</span> <span class='s'>&#39;.html&#39;</span>
+    <span class='k'>return</span> <span class='n'>os</span><span class='o'>.</span><span class='n'>path</span><span class='o'>.</span><span class='n'>join</span><span class='p'>(</span><span class='n'>CACHE_DIR</span><span class='p'>,</span> <span class='n'>hash_file</span><span class='p'>)</span>
+
+
+<span class='k'>def</span> <span class='nf'>store_local</span><span class='p'>(</span><span class='n'>url</span><span class='p'>,</span> <span class='n'>content</span><span class='p'>):</span>
+    <span class='sd'>&quot;&quot;&quot; Save a local copy of the file. &quot;&quot;&quot;</span>
+
+    <span class='c'># If the cache directory does not exist, make one.</span>
+    <span class='k'>if</span> <span class='ow'>not</span> <span class='n'>os</span><span class='o'>.</span><span class='n'>path</span><span class='o'>.</span><span class='n'>isdir</span><span class='p'>(</span><span class='n'>CACHE_DIR</span><span class='p'>):</span>
+        <span class='n'>os</span><span class='o'>.</span><span class='n'>makedirs</span><span class='p'>(</span><span class='n'>CACHE_DIR</span><span class='p'>)</span>
+
+    <span class='c'># Save to disk.</span>
+    <span class='n'>local_path</span> <span class='o'>=</span> <span class='n'>url_to_filename</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+    <span class='k'>with</span> <span class='nb'>open</span><span class='p'>(</span><span class='n'>local_path</span><span class='p'>,</span> <span class='s'>&#39;wb&#39;</span><span class='p'>)</span> <span class='k'>as</span> <span class='n'>f</span><span class='p'>:</span>
+        <span class='n'>f</span><span class='o'>.</span><span class='n'>write</span><span class='p'>(</span><span class='n'>content</span><span class='p'>)</span>
+
+
+<span class='k'>def</span> <span class='nf'>load_local</span><span class='p'>(</span><span class='n'>url</span><span class='p'>):</span>
+    <span class='sd'>&quot;&quot;&quot; Read a local copy of a URL. &quot;&quot;&quot;</span>
+    <span class='n'>local_path</span> <span class='o'>=</span> <span class='n'>url_to_filename</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+    <span class='k'>if</span> <span class='ow'>not</span> <span class='n'>os</span><span class='o'>.</span><span class='n'>path</span><span class='o'>.</span><span class='n'>exists</span><span class='p'>(</span><span class='n'>local_path</span><span class='p'>):</span>
+        <span class='k'>return</span> <span class='bp'>None</span>
+
+    <span class='k'>with</span> <span class='nb'>open</span><span class='p'>(</span><span class='n'>local_path</span><span class='p'>,</span> <span class='s'>&#39;rb&#39;</span><span class='p'>)</span> <span class='k'>as</span> <span class='n'>f</span><span class='p'>:</span>
+        <span class='k'>return</span> <span class='n'>f</span><span class='o'>.</span><span class='n'>read</span><span class='p'>()</span>
+
+
+<span class='k'>def</span> <span class='nf'>get_content</span><span class='p'>(</span><span class='n'>url</span><span class='p'>):</span>
+    <span class='sd'>&quot;&quot;&quot; Wrap requests.get() &quot;&quot;&quot;</span>
+    <span class='n'>content</span> <span class='o'>=</span> <span class='n'>load_local</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+    <span class='k'>if</span> <span class='n'>content</span> <span class='ow'>is</span> <span class='bp'>None</span><span class='p'>:</span>
+        <span class='n'>response</span> <span class='o'>=</span> <span class='n'>requests</span><span class='o'>.</span><span class='n'>get</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+        <span class='n'>content</span> <span class='o'>=</span> <span class='n'>response</span><span class='o'>.</span><span class='n'>content</span>
+        <span class='n'>store_local</span><span class='p'>(</span><span class='n'>url</span><span class='p'>,</span> <span class='n'>content</span><span class='p'>)</span>
+    <span class='k'>return</span> <span class='n'>content</span>
+</code></pre></div>
+<p>Now, everytime we request a new missed connection, we should use our <code>get_content</code> function instead of <code>requests.get()</code>. Merging this code in, our script should now look <a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/02-caching.py'>this</a>.</p>
+<br />
+<h2 id='multithreading'>Multithreading</h2>
+
+<p>Up to this point, our script has only been capable of downloading a single missed connection at a time. It turns out that a single processor is capable of executing multiple tasks at a time via a process that&#8217;s called &#8221;<a href='http://en.wikipedia.org/wiki/Multithreading_(computer_architecture'>multithreading</a>).&#8221; This is different than <a href='http://en.wikipedia.org/wiki/Parallel_processing'>parallel processing</a> where a set of tasks are executed across across a series of networked computers. In the case of our task – scraping multiple missed connections – this means that instead of simply looping through the list of each missed connection, that we&#8217;ll first detect all the urls to the missed connection pages and then downloading and parse these pages across multiple threads. It turns out that, once again, <a href='http://twitter.com/pudo'>@pudo</a> has solved this problem for us. With a simple module he wrote named <a href='https://github.com/pudo/thready'>thready</a>, we can pass this list of urls to our function that scrapes each missed connection and very quickly and easily increase the speed with which we parse all the pages. This is implemented by modifying our <code>scrape_missed_connections</code> function as follows:</p>
+<br /><div class='highlight'><pre><code class='python'><span class='kn'>from</span> <span class='nn'>thready</span> <span class='kn'>import</span> <span class='n'>threaded</span>
+
+<span class='o'>...</span>
+
+<span class='k'>def</span> <span class='nf'>scrape_missed_connections</span><span class='p'>():</span>
+    <span class='sd'>&quot;&quot;&quot; Scrape all the missed connections from a list &quot;&quot;&quot;</span>
+
+    <span class='n'>response</span> <span class='o'>=</span> <span class='n'>requests</span><span class='o'>.</span><span class='n'>get</span><span class='p'>(</span><span class='n'>BASE_URL</span> <span class='o'>+</span> <span class='s'>&quot;mis/&quot;</span><span class='p'>)</span>
+    <span class='n'>soup</span> <span class='o'>=</span> <span class='n'>BeautifulSoup</span><span class='p'>(</span><span class='n'>response</span><span class='o'>.</span><span class='n'>content</span><span class='p'>)</span>
+    <span class='n'>missed_connections</span> <span class='o'>=</span> <span class='n'>soup</span><span class='o'>.</span><span class='n'>find_all</span><span class='p'>(</span><span class='s'>&#39;span&#39;</span><span class='p'>,</span> <span class='p'>{</span><span class='s'>&#39;class&#39;</span><span class='p'>:</span><span class='s'>&#39;pl&#39;</span><span class='p'>})</span>
+
+    <span class='c'># create an empty list of urls to scrape </span>
+    <span class='n'>urls</span> <span class='o'>=</span> <span class='p'>[]</span>
+    <span class='k'>for</span> <span class='n'>missed_connection</span> <span class='ow'>in</span> <span class='n'>missed_connections</span><span class='p'>:</span>
+
+        <span class='n'>link</span> <span class='o'>=</span> <span class='n'>missed_connection</span><span class='o'>.</span><span class='n'>find</span><span class='p'>(</span><span class='s'>&#39;a&#39;</span><span class='p'>)</span><span class='o'>.</span><span class='n'>attrs</span><span class='p'>[</span><span class='s'>&#39;href&#39;</span><span class='p'>]</span>
+        <span class='n'>url</span> <span class='o'>=</span> <span class='n'>urljoin</span><span class='p'>(</span><span class='n'>BASE_URL</span><span class='p'>,</span> <span class='n'>link</span><span class='p'>)</span>
+        
+        <span class='c'># iteratively populate this list </span>
+        <span class='n'>urls</span><span class='o'>.</span><span class='n'>append</span><span class='p'>(</span><span class='n'>url</span><span class='p'>)</span>
+
+
+    <span class='c'># download and parse these missed connections using</span>
+    <span class='c'># multiple threads</span>
+    <span class='n'>threaded</span><span class='p'>(</span><span class='n'>urls</span><span class='p'>,</span> <span class='n'>scrape_missed_connection</span><span class='p'>,</span> <span class='n'>num_threads</span><span class='o'>=</span><span class='mi'>10</span><span class='p'>)</span>
+</code></pre></div><br />
+<p>Now when we execute <a href='https://github.com/abelsonlive/scrape-the-gibson/blob/master/03-multithreading.py'>this script</a>, it should run much, much faster than our previous scripts. Be warned, however, many sites do not appreciate you requesting multiple pages at once and may ban you from the site for throttling their servers. Make sure to excercise caution and be respectful when utilizing multiple threads to scrape a site.</p>
+<br />
+<p>With these three simple skills, you should be able to start scraping the web like a true hacker. Enjoy!</p></section>
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'brianabelson';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</article>
+            </article>
+            </div>
+            <div class="span3" id="rail">
+                <div id="logos"><a href="/"><img id="logo" src="/img/logo.png"></a></div>
+                <hr/>
+                <p class="nav-header">I'm Brian Abelson, a 2013 OpenNews Fellow at the New York Times. I apply statistics and social science to journalism and the measurement of media impact.</p>
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <footer>
+                    <p class="footer">
+                        &copy; <a href="/">brian abelson</a> 2013 <br>
+                        powered by <a href="http://github.com/mojombo/jekyll/" target="_blank">jekyll</a> |
+                        layout from <a href="http://blog.apps.npr.org/" target="_blank">npr news apps</a>
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="/js/csv.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    <!-- GOOGLE ANALYTICS -->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-9282817-3']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    </body>
+</html>
